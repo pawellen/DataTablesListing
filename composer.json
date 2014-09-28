@@ -1,0 +1,26 @@
+{
+    "name": "pawellen/data-tables-listing",
+    "type": "symfony-bundle",
+    "description": "Listing Bundle providing easy datatables (http://www.datatables.net/) usage",
+    "keywords": ["datatables", "listing"],
+    "homepage": "https://github.com/pawellen/DataTablesListing",
+    "license": "Apache2",
+    "authors": [
+        {
+            "name": "Paweł Leń",
+            "email": "pawel.len@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/framework-bundle": ">=2.0",
+        "jms/payment-core-bundle": "dev-master"
+    },
+    "require-dev": {
+
+    },
+    "autoload": {
+        "psr-0": { "ETS\\Payment\\DotpayBundle": "" }
+    },
+    "target-dir": "pawellen/DataTablesListing"
+}
