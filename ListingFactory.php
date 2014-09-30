@@ -12,7 +12,7 @@ use PawelLen\DataTablesListing\Type\ListingTypeInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use PawelLen\DataTablesListing\Filters\FilterBuilder;
 
@@ -45,7 +45,7 @@ class ListingFactory
      * @param RegistryInterface $registry
      * @param Router $router
      */
-    function __construct(FormFactoryInterface $formFactory, RegistryInterface $registry, Router $router, EventDispatcherInterface $eventDispatcher)
+    function __construct(FormFactoryInterface $formFactory, RegistryInterface $registry, RouterInterface $router, EventDispatcherInterface $eventDispatcher)
     {
         $this->formFactory = $formFactory;
         $this->registry = $registry;
