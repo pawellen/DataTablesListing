@@ -44,7 +44,7 @@ class ListingFactory
     /**
      * @param FormFactoryInterface $formFactory
      * @param RegistryInterface $registry
-     * @param Router $router
+     * @param RouterInterface $router
      */
     function __construct(FormFactoryInterface $formFactory, RegistryInterface $registry, RouterInterface $router, EventDispatcherInterface $eventDispatcher)
     {

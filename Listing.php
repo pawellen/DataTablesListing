@@ -14,7 +14,7 @@ use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -116,9 +116,9 @@ class Listing
      * @param Form $form
      * @param array $options
      * @param RegistryInterface $registry
-     * @param Router $router
+     * @param RouterInterface $router
      */
-    public function __construct($name, array $columns, array $buttons, array $filters, Form $form, array $options, RegistryInterface $registry, Router $router, EventDispatcherInterface $eventDispatcher) {
+    public function __construct($name, array $columns, array $buttons, array $filters, Form $form, array $options, RegistryInterface $registry, RouterInterface $router, EventDispatcherInterface $eventDispatcher) {
         $this->name = trim($name);
         $this->columns = $columns;
         $this->buttons = $buttons;
