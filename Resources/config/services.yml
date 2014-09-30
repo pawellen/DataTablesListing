@@ -1,0 +1,14 @@
+services:
+    listing:
+        class: PawelLen\DataTablesListing\ListingFactory
+        arguments:
+            formFactory: "@form.factory"
+            registry: "@doctrine"
+            router: "@router"
+            eventDispatcher: "@event_dispatcher"
+
+    listing.extension:
+        class: PawelLen\DataTablesListing\Twig\ListingExtension
+        tags:
+            - { name: twig.extension }
+
