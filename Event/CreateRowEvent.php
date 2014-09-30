@@ -6,7 +6,7 @@
  * Time: 16:58
  */
 
-namespace PawelLen\DataTablesListing\Listing\Event;
+namespace PawelLen\DataTablesListing\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 

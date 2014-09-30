@@ -7,10 +7,10 @@
  * Time: 09:25
  */
 
-namespace PawelLen\DataTablesListing\Listing\Twig;
+namespace PawelLen\DataTablesListing\Twig;
 
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use PawelLen\DataTablesListing\Listing\ListingView;
+use PawelLen\DataTablesListing\ListingView;
 
 class ListingExtension extends \Twig_Extension {
 

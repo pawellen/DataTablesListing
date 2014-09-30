@@ -6,7 +6,7 @@
  * Time: 09:13
  */
 
-namespace PawelLen\DataTablesListing\Listing\Filters;
+namespace PawelLen\DataTablesListing\Filters;
 
 
 use Symfony\Component\Form\FormBuilderInterface;

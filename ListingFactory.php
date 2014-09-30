@@ -6,14 +6,15 @@
  * Time: 11:36
  */
 
-namespace PawelLen\DataTablesListing\Listing;
+namespace PawelLen\DataTablesListing;
 
+use PawelLen\DataTablesListing\Type\ListingTypeInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use PawelLen\DataTablesListing\Listing\Filters\FilterBuilder;
+use PawelLen\DataTablesListing\Filters\FilterBuilder;
 
 
 class ListingFactory

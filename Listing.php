@@ -7,7 +7,7 @@
  * Time: 11:29
  */
 
-namespace PawelLen\DataTablesListing\Listing;
+namespace PawelLen\DataTablesListing;
 
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
@@ -20,12 +20,12 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use PawelLen\DataTablesListing\Listing\Event\CreateRowEvent;
-use PawelLen\DataTablesListing\Listing\Event\SearchCriteriaEvent;
+use PawelLen\DataTablesListing\Event\CreateRowEvent;
+use PawelLen\DataTablesListing\Event\SearchCriteriaEvent;
 
 
-class Listing {
-
+class Listing
+{
     /**
      * @var string
      */

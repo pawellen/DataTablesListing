@@ -6,14 +6,13 @@
  * Time: 09:13
  */
 
-namespace PawelLen\DataTablesListing\Listing\Filters;
+namespace PawelLen\DataTablesListing\Filters;
 
 use Symfony\Component\Form\FormFactoryInterface;
 
 
-interface FilterBuilderInterface {
-
-
+interface FilterBuilderInterface
+{
     /**
      * @param FormFactoryInterface $formFactory
      * @param string $name

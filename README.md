@@ -73,8 +73,8 @@ Example:
 ```php
 namespace Td\UserBundle\Listing;
 
-use PawelLen\DataTablesListing\Listing\AbstractType;
-use PawelLen\DataTablesListing\Listing\Filters\FilterBuilderInterface;
+use PawelLen\DataTablesListing\Type\AbstractType;
+use PawelLen\DataTablesListing\Filters\FilterBuilderInterface;
 use PawelLen\DataTablesListing\Listing\ListingBuilderInterface;
 
 class UserListing extends AbstractType

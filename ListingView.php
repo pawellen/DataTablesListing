@@ -7,13 +7,13 @@
  * Time: 11:29
  */
 
-namespace PawelLen\DataTablesListing\Listing;
+namespace PawelLen\DataTablesListing;
 
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormView;
 
-class ListingView {
-
+class ListingView
+{
     /**
      * @var string
      */

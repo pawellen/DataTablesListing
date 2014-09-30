@@ -6,10 +6,11 @@
  * Time: 09:13
  */
 
-namespace PawelLen\DataTablesListing\Listing;
+namespace PawelLen\DataTablesListing\Type;
 
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use PawelLen\DataTablesListing\Listing\Filters\FilterBuilderInterface;
+use PawelLen\DataTablesListing\Listing\ListingBuilderInterface;
+use PawelLen\DataTablesListing\Filters\FilterBuilderInterface;
 
 
 interface ListingTypeInterface {
