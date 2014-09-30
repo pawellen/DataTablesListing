@@ -8,6 +8,7 @@
 
 namespace PawelLen\DataTablesListing;
 
+use PawelLen\DataTablesListing\Listing\ListingBuilder;
 use PawelLen\DataTablesListing\Type\ListingTypeInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\FormFactoryInterface;

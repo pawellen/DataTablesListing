@@ -6,10 +6,9 @@
  * Time: 09:13
  */
 
-namespace PawelLen\DataTablesListing;
+namespace PawelLen\DataTablesListing\Listing;
 
 
-use PawelLen\DataTablesListing\Listing\ListingBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ListingBuilder implements ListingBuilderInterface
