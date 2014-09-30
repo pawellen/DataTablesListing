@@ -20,5 +20,6 @@
     },
     "autoload": {
         "psr-0": { "PawelLen\\DataTablesListing": "" }
-    }
+    },
+    "target-dir": "PawelLen/DataTablesListing"
 }
