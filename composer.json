@@ -19,7 +19,6 @@
 
     },
     "autoload": {
-        "psr-0": { "ETS\\Payment\\DotpayBundle": "" }
-    },
-    "target-dir": "pawellen/DataTablesListing"
+        "psr-0": { "PawelLen\\DataTablesListing": "" }
+    }
 }

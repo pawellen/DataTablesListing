@@ -5,13 +5,22 @@ Data tables listing plugin allow you to easy creating record list, using Symfony
 
 Installation
 ===
+
 1. Install plugin using composer:
 ```js
 {
     "pawellen/data-tables-listing": "dev-master"
 }
 ```
-2. Add DataTables javascript script to your template using listing_scripts twig function.
+2. Update Your AppKernel.php
+```php
+    $bundles = array (
+        (...)
+        new PawelLen\DataTablesListing\DataTablesListingBundle()
+    );
+
+
+3. Add DataTables javascript script to your template using listing_scripts twig function.
 Example:
 ```html
     <html>
@@ -26,7 +35,7 @@ Example:
         </body>
     </html>
 ```
-3. Your listing is ready to use :)
+4. Your listing is ready to use :)
 
 Usage
 ===
