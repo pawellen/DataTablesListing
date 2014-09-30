@@ -1,0 +1,62 @@
+{% trans_default_domain 'TdCoreBundle' %}
+
+{% block listing_scripts %}
+    <script type="text/javascript" src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js" charset="utf8"></script>
+    <script type="text/javascript" src="{{ asset('bundles/pawellendatatableslisting/js/listing.js') }}" charset="utf8"></script>
+{% endblock %}
+
+
+{% block listing_styles %}
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
+{% endblock %}
+
+
+{% block include_listing_header %}
+{% spaceless %}
+    {{ block('listing_styles') }}
+    {{ block('listing_scripts') }}
+{% endspaceless %}
+{% endblock %}
+
+{% block listing_head-%}
+    <thead class="{{ parameters('system_contrast') ? parameters('system_contrast') : 'dark' }}-background">
+        {% for name, label in list.tableHeader %}
+        <th>{{ label|trans }}</th>
+        {% endfor %}
+    </thead>
+{% endblock %}
+
+
+{% block listing_body %}
+    <tbody>
+    </tbody>
+{% endblock %}
+
+
+{% block listing_table %}
+    <table id="listing_table_{{ list.name }}" class="table-bordered table-hover dataTable" data-ajaxsource="{{ list.ajaxSource }}">
+        {{ block('listing_head') }}
+        {{ block('listing_body') }}
+    </table>
+{% endblock %}
+
+
+{% block listing_filters %}
+    <div id="listing_filters_{{ list.name }}">
+        {{ form(list.filters) }}
+    </div>
+{% endblock %}
+
+
+{% block listing %}
+{% spaceless %}
+    {% if list.hasFilters %}
+        {{ block('listing_filters') }}
+    {% endif %}
+    {{ block('listing_table') }}
+
+    <script type="text/javascript">
+        var table{{ list.name }} = _listing.initTable('listing_table_{{ list.name }}', 'listing_filters_{{ list.name }}');
+    </script>
+{% endspaceless %}
+{% endblock listing %}
