@@ -1,4 +1,3 @@
-{% trans_default_domain 'TdCoreBundle' %}
 
 {% block listing_scripts %}
     <script type="text/javascript" src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js" charset="utf8"></script>
@@ -18,8 +17,9 @@
 {% endspaceless %}
 {% endblock %}
 
+
 {% block listing_head-%}
-    <thead class="{{ parameters('system_contrast') ? parameters('system_contrast') : 'dark' }}-background">
+    <thead>
         {% for name, label in list.tableHeader %}
         <th>{{ label|trans }}</th>
         {% endfor %}

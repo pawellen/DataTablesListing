@@ -28,7 +28,7 @@ class ListingExtension extends \Twig_Extension {
     }
 
     public function listing(ListingView $listingView) {
-        $template = $this->environment->loadTemplate('PawelLenDataTablesListingBundle::listing_div_layout.html.twig');
+        $template = $this->environment->loadTemplate('DataTablesListing::listing_div_layout.html.twig');
         
         return $template->renderBlock('listing', array(
             'list' => $listingView
@@ -42,7 +42,7 @@ class ListingExtension extends \Twig_Extension {
             return '<!-- Listing scripts already rendered -->';
         } else {
             $isRendered = true;
-            $template = $this->environment->loadTemplate('PawelLenDataTablesListingBundle::listing_div_layout.html.twig');
+            $template = $this->environment->loadTemplate('DataTablesListing::listing_div_layout.html.twig');
 
             return $template->renderBlock('include_listing_header', array());
         }
