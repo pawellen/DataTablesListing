@@ -9,8 +9,9 @@
 
 namespace PawelLen\DataTablesListing\Twig;
 
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use PawelLen\DataTablesListing\ListingView;
+use PawelLen\DataTablesListing\Renderer\ListingRendererInterface;
+
 
 class ListingExtension extends \Twig_Extension
 {
@@ -21,18 +22,18 @@ class ListingExtension extends \Twig_Extension
     protected $environment;
 
     /**
-     * @var string
+     * @var ListingRendererInterface
      */
-    protected $defaultTemplate;
+    protected $renderer;
 
 
 
     /**
-     * @param string $defaultTemplate
+     * @param ListingRendererInterface $renderer
      */
-    public function __construct($defaultTemplate)
+    public function __construct(ListingRendererInterface $renderer)
     {
-        $this->defaultTemplate = (string)$defaultTemplate;
+        $this->renderer = $renderer;
     }
 
 
@@ -42,6 +43,7 @@ class ListingExtension extends \Twig_Extension
     public function initRuntime(\Twig_Environment $environment)
     {
         $this->environment = $environment;
+        $this->renderer->initRuntime($environment);
     }
 
 
@@ -52,7 +54,7 @@ class ListingExtension extends \Twig_Extension
     {
         return array(
             'render_listing' => new \Twig_Function_Method($this, 'renderListing', array('is_safe' => array('html'))),
-            'render_listing_scripts' => new \Twig_Function_Method($this, 'renderListingScripts', array('is_safe' => array('html'))),
+            'render_listing_assets' => new \Twig_Function_Method($this, 'renderListingAssets', array('is_safe' => array('html'))),
         );
     }
 
@@ -61,41 +63,27 @@ class ListingExtension extends \Twig_Extension
      * @param ListingView $listingView
      * @return string
      */
-    public function renderListing(ListingView $listingView)
+    public function renderListing(ListingView $listingView, $template = null)
     {
-        /** @var \Twig_Template $template */
-        $template = $this->environment->loadTemplate($this->defaultTemplate);
-
-        // Override template blocks:
-        $blocks = array();
-        if ($listingView->getTemplateReference()) {
-            /** @var \Twig_Template $childTemplate */
-            $childTemplate = $this->environment->loadTemplate($listingView->getTemplateReference());
-            $blocks = $childTemplate->getBlocks();
-        }
-
-        return $template->renderBlock('listing', array(
-            'listing' => $listingView
-        ), $blocks);
+        $this->renderer->load($template ?: $listingView->getTemplateReference());
+        return $this->renderer->renderListing($listingView);
     }
 
 
     /**
      * @return string
      */
-    public function renderListingScripts()
+    public function renderListingAssets()
     {
         static $isRendered = false;
 
         if (!$isRendered) {
-            /** @var \Twig_Template $template */
-            $template = $this->environment->loadTemplate($this->defaultTemplate);
             $isRendered = true;
 
-            return $template->renderBlock('listing_assets', array());
+            return $this->renderer->renderListingAssets();
         }
 
-        return '<!-- Listing scripts already rendered -->';
+        return '<!-- Listing assets already rendered -->';
     }
 
 

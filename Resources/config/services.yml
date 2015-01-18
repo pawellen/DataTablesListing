@@ -4,15 +4,28 @@ services:
         arguments:
             formFactory: "@form.factory"
             registry: "@doctrine"
-            router: "@router"
             eventDispatcher: "@event_dispatcher"
-            environment: "@twig"
+            renderer: "@listing.renderer"
+
+    listing.renderer:
+        class: PawelLen\DataTablesListing\Renderer\ListingRenderer
+        arguments:
+            router: "@router"
             defaultTemplate: "%data_tables_listing.default_template%"
+            assetsConfiguration: "%data_tables_listing.include_assets%"
+            environment: "@twig"
+
+    listing.not_initialized_renderer:
+        class: PawelLen\DataTablesListing\Renderer\ListingRenderer
+        arguments:
+            router: "@router"
+            defaultTemplate: "%data_tables_listing.default_template%"
+            assetsConfiguration: "%data_tables_listing.include_assets%"
 
     listing.extension:
         class: PawelLen\DataTablesListing\Twig\ListingExtension
         arguments:
-            defaultTemplate: "%data_tables_listing.default_template%"
+            renderer: "@listing.not_initialized_renderer"
         tags:
             - { name: twig.extension }
 

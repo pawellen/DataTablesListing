@@ -20,6 +20,20 @@ class ListingCheckbox extends ListingColumnType
         parent::__construct($name, $options);
     }
 
+
+    /**
+     * @inheritdoc
+     */
+    public function getValues($row)
+    {
+        $name = $this->getPropertyValue($row, $this->options['property']);
+
+        return array(
+            'name' => $name
+        );
+    }
+
+
     /**
      * @return string
      */

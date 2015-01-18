@@ -8,6 +8,7 @@
 
 namespace PawelLen\DataTablesListing;
 
+use PawelLen\DataTablesListing\Renderer\ListingRendererInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\OptionsResolver\Options;
@@ -32,41 +33,28 @@ class ListingFactory
     protected $registry;
 
     /**
-     * @var RouterInterface
-     */
-    protected $router;
-
-    /**
      * \Twig_Environment  $environment
      */
     protected $eventDispatcher;
 
     /**
-     * @var \Twig_Environment
+     * @var ListingRendererInterface
      */
-    protected $environment;
-
-    /**
-     * @var string
-     */
-    protected $defaultTemplate;
+    protected $renderer;
 
 
     /**
      * @param FormFactoryInterface $formFactory
      * @param RegistryInterface $registry
-     * @param RouterInterface $router
      * @param EventDispatcherInterface $eventDispatcher
-     * @param \Twig_Environment $environment
+     * @param ListingRendererInterface $renderer
      */
-    public function __construct(FormFactoryInterface $formFactory, RegistryInterface $registry, RouterInterface $router, EventDispatcherInterface $eventDispatcher, \Twig_Environment  $environment, $defaultTemplate)
+    public function __construct(FormFactoryInterface $formFactory, RegistryInterface $registry, EventDispatcherInterface $eventDispatcher, ListingRendererInterface $renderer)
     {
         $this->formFactory = $formFactory;
         $this->registry = $registry;
-        $this->router = $router;
         $this->eventDispatcher = $eventDispatcher;
-        $this->environment = $environment;
-        $this->defaultTemplate = $defaultTemplate;
+        $this->renderer = $renderer;
     }
 
     /**
@@ -76,7 +64,7 @@ class ListingFactory
      */
     public function createListing(ListingTypeInterface $type, array $options = array())
     {
-        $router = $this->router;
+        $router = $this->renderer->getRouter();
         $dataSourceResolver = function(Options $options) use ($router) {
             if (isset($options['route'])) {
                 $data_source = $router->generate($options['route'], isset($options['route_parameters']) ? $options['route_parameters'] : array());
@@ -119,10 +107,8 @@ class ListingFactory
             $columnBuilder->getColumns(),
             $filterBuilder->getFilters(),
             $this->registry,
-            $this->router,
             $this->eventDispatcher,
-            $this->environment,
-            $this->defaultTemplate,
+            $this->renderer,
             $optionsResolver->resolve($options)
         );
 

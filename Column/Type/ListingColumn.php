@@ -9,6 +9,8 @@
 namespace PawelLen\DataTablesListing\Column\Type;
 
 
+use Symfony\Component\PropertyAccess\PropertyAccess;
+
 class ListingColumn extends ListingColumnType
 {
     /**
@@ -20,6 +22,7 @@ class ListingColumn extends ListingColumnType
         parent::__construct($name, $options);
     }
 
+
     /**
      * @return bool
      */
@@ -30,6 +33,27 @@ class ListingColumn extends ListingColumnType
         }
 
         return true;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function getValues($row)
+    {
+        $property = isset($this->options['property']) ? $this->options['property'] : $this->getName();
+        $value = $this->getPropertyValue($row, $property);
+
+        // Process value using callback:
+        if (isset($this->options['callback']) && is_callable($this->options['callback'])) {
+            $value = $this->options['callback']($value, $row, $this);
+        }
+
+        return array(
+            'value' => $value,
+            'row' => $row,
+            'name' => $this->name
+        );
     }
 
 

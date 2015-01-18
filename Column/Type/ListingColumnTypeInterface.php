@@ -23,6 +23,13 @@ interface ListingColumnTypeInterface
 
 
     /**
+     * @param $row
+     * @return mixed
+     */
+    public function getValues($row);
+
+
+    /**
      * @return array
      */
     public function getOptions();

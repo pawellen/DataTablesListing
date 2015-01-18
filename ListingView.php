@@ -62,7 +62,7 @@ class ListingView
         $this->filters = $filters;
         $this->options = $options;
         $this->data = $data;
-        $this->templateReference = isset($options['template']) ? $options['template'] : false;
+        $this->templateReference = isset($options['template']) ? $options['template'] : null;
     }
 
 

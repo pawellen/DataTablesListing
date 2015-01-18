@@ -9,15 +9,14 @@
 
 namespace PawelLen\DataTablesListing;
 
-use PawelLen\DataTablesListing\Column\Type\ListingColumnTypeInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\Routing\RouterInterface;
+use PawelLen\DataTablesListing\Column\Type\ListingColumnTypeInterface;
+use PawelLen\DataTablesListing\Renderer\ListingRendererInterface;
 use PawelLen\DataTablesListing\Filter\Type\ListingFilter;
 use PawelLen\DataTablesListing\Column\Columns;
 use PawelLen\DataTablesListing\Filter\Filters;
@@ -46,24 +45,14 @@ class Listing
     protected $registry;
 
     /**
-     * @var RouterInterface
-     */
-    protected $router;
-
-    /**
      * @var EventDispatcherInterface
      */
     protected $eventDispatcher;
 
     /**
-     * @var \Twig_Environment
+     * @var ListingRendererInterface
      */
-    protected $environment;
-
-    /**
-     * @var string
-     */
-    protected $defaultTemplate;
+    protected $renderer;
 
     /**
      * @var array
@@ -80,10 +69,6 @@ class Listing
      */
     protected $firstResultsOffset;
 
-    /**
-     * Value when property accessor throws exception
-     */
-    const valueOnPropertyAccessorException = '!';
 
 
     /**
@@ -91,21 +76,18 @@ class Listing
      * @param Columns $columns
      * @param Filters $filters
      * @param RegistryInterface $registry
-     * @param RouterInterface $router
      * @param EventDispatcherInterface $eventDispatcher
-     * @param \Twig_Environment $environment
+     * @param ListingRendererInterface $renderer
      * @param array $options
      */
-    public function __construct($name, Columns $columns, Filters $filters, RegistryInterface $registry, RouterInterface $router, EventDispatcherInterface $eventDispatcher, \Twig_Environment  $environment, $defaultTemplate, array $options = array())
+    public function __construct($name, Columns $columns, Filters $filters, RegistryInterface $registry, EventDispatcherInterface $eventDispatcher, ListingRendererInterface $renderer, array $options = array())
     {
         $this->name = $name;
         $this->columns = $columns;
         $this->filters = $filters;
         $this->registry = $registry;
         $this->eventDispatcher = $eventDispatcher;
-        $this->router = $router;
-        $this->environment = $environment;
-        $this->defaultTemplate = $defaultTemplate;
+        $this->renderer = $renderer;
         $this->options = $options;
     }
 
@@ -185,175 +167,6 @@ class Listing
 
 
     /**
-     * @return array
-     */
-    protected function loadTemplateAndBlocks()
-    {
-        /** @var \Twig_Template $template */
-        $template = $this->environment->loadTemplate($this->defaultTemplate);
-
-        // Override template blocks:
-        $blocks = array();
-        if (isset($this->options['template'])) {
-            /** @var \Twig_Template $childTemplate */
-            $childTemplate = $this->environment->loadTemplate($this->options['template']);
-            $blocks = $childTemplate->getBlocks();
-        }
-
-        return array(
-            'template' => $template,
-            'blocks' => $blocks
-        );
-    }
-
-
-    /**
-     * @param $data
-     * @return array
-     * @throws \Exception
-     */
-    protected function processData($data)
-    {
-        if (!is_array($data) && !$data instanceof \Traversable) {
-            throw new \Exception('convertToDataTablesFormat: Unable to get convert result, result is not traversable.');
-        }
-        $templateAndBlocks = $this->loadTemplateAndBlocks();
-
-        $processed = array();
-        foreach ($data as $result) {
-            $row = array();
-            /** @var ListingColumnTypeInterface $column */
-            foreach ($this->columns as $column) {
-                $options = $column->getOptions();
-                $property = isset($options['property']) ? $options['property'] : $column->getName();
-                $value = $this->getPropertyValue($result, $property);
-
-                // Process value using callback:
-                if (isset($options['callback']) && is_callable($options['callback'])) {
-                    $value = $options['callback']($value, $result, $column);
-                }
-                $value = $this->normalizeValue($value, $options);
-                $value = $this->transformValue($value, $result, $options);
-
-                // Render cell value:
-                $cellValue = $templateAndBlocks['template']->renderBlock('listing_column', array(
-                    'column' => $column,
-                    'value' => $value
-                ), $templateAndBlocks['blocks']);
-
-                $row[] = trim($cellValue);
-            }
-            $processed[] = $row;
-        }
-
-        return $processed;
-    }
-
-
-    /**
-     * @param $data
-     * @return array
-     */
-    protected function createDataTablesResult($data)
-    {
-        $result = array(
-            'sEcho' => 0,
-            'iTotalRecords' => $this->allResultsCount,
-            'iTotalDisplayRecords' => $this->allResultsCount,
-            'data' => $data,
-        );
-
-        return $result;
-    }
-
-
-    /**
-     * @param $value
-     * @param array $options
-     * @return string
-     */
-    protected function normalizeValue($value, array $options = array())
-    {
-        switch (true) {
-            case ($value instanceof \DateTime):
-                $value = $value->format($options['date_format']);
-                break;
-
-            case (is_object($value) && method_exists($value, '__toString')):
-                $value = (string)$value;
-                break;
-
-        }
-
-        return $value;
-    }
-
-
-    /**
-     * @param $value
-     * @param array $options
-     * @return string
-     */
-    protected function transformValue($value, $row, array $options = array())
-    {
-        if (isset($options['route'])) {
-            $parameters = array();
-            if (isset($options['route_parameters'])) {
-                $propertyAccessor = PropertyAccess::createPropertyAccessor();
-                foreach ($options['route_parameters'] as $_name => $_propertyPath) {
-                    $parameters[$_name] = $propertyAccessor->getValue($row, $_propertyPath);
-                }
-            }
-            $url = $this->router->generate($options['route'], $parameters);
-            $value = '<a href="' . $url . '">' . htmlspecialchars($value) . '</a>';
-        }
-
-        return $value;
-    }
-
-
-    /**
-     * @param $data
-     * @param $propertyPath
-     * @return string
-     * @throws \Exception
-     */
-    protected function getPropertyValue($data, $propertyPath)
-    {
-        $propertyAccessor = PropertyAccess::createPropertyAccessor();
-        switch (substr_count($propertyPath, '[*]')) {
-            case 0:
-                try {
-                    $value = $propertyAccessor->getValue($data, $propertyPath);
-                } catch (\Exception $e) {
-                    $value = self::valueOnPropertyAccessorException;
-                }
-                break;
-
-            case 1:
-                $iterator = 0;
-                $values = array();
-                while (1) {
-                    try {
-                        $propertyPathIterator = str_replace('[*]', '[' . $iterator . ']', $propertyPath);
-                        $values[] = $propertyAccessor->getValue($data, $propertyPathIterator);
-                    } catch (\Exception $e) {
-                        break;
-                    }
-                    ++$iterator;
-                }
-                $value = implode(', ', $values);
-                break;
-
-            default:
-                throw new \Exception('Only one wildcard for property is allowed');
-        }
-
-        return $value;
-    }
-
-
-    /**
      * @param array $parameters
      * @param array $filters
      * @return array
@@ -417,6 +230,51 @@ class Listing
         }
 
         return $data;
+    }
+
+
+    /**
+     * @param $data
+     * @return array
+     * @throws \Exception
+     */
+    protected function processData($data)
+    {
+        if (!is_array($data) && !$data instanceof \Traversable) {
+            throw new \Exception('Unable to process data, query result is not traversable.');
+        }
+
+        // Load renderer template:
+        $this->renderer->load(isset($this->options['template']) ? $this->options['template'] : null);
+
+        $table = array();
+        foreach ($data as $row) {
+            $tr = array();
+            /** @var ListingColumnTypeInterface $column */
+            foreach ($this->columns as $column) {
+                $tr[] = $this->renderer->renderCell($column, $row);
+            }
+            $table[] = $tr;
+        }
+
+        return $table;
+    }
+
+
+    /**
+     * @param $data
+     * @return array
+     */
+    protected function createDataTablesResult($data)
+    {
+        $result = array(
+            'sEcho' => 0,
+            'iTotalRecords' => $this->allResultsCount,
+            'iTotalDisplayRecords' => $this->allResultsCount,
+            'data' => $data,
+        );
+
+        return $result;
     }
 
 

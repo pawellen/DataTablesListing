@@ -20,6 +20,17 @@ Installation
     );
 
 
+2,5. Configuration:
+
+data_tables_listing:
+    default_template: LenPanelBundle::listing_div_layout.html.twig
+    include_assets:
+        datatables_js: false
+        datatables_css: false
+        include_jquery: false
+        jquery_js: "//code.jquery.com/jquery-2.1.3.min.js"
+
+
 3. Add DataTables javascript script to your template using listing_scripts twig function.
 Example:
 ```html

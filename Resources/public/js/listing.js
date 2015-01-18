@@ -76,15 +76,17 @@ var _listing = function() {
                     $('#' + tableId + '_paginate').hide();
                 }
             },
+            /*
             rowCallback: function(row, data) {
                 // Process single <tr>, after table row is added to DOM:
                 for (var i = 0; i < data.length; i++) {
                     var td = $(':eq(' + i + ')', row);
-                    td.replaceWith(data[i]);
+                    td.replaceWith('-');
                 }
 
                 return row;
             },
+            */
             //pagingType: "scrolling",
             pageLength: 20
         };
