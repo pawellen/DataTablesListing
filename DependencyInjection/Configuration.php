@@ -18,7 +18,12 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('listing');
+        $rootNode = $treeBuilder->root('data_tables_listing')
+            ->children()
+                ->scalarNode('default_template')
+                    ->defaultValue('DataTablesListingBundle::listing_div_layout.html.twig')
+                ->end()
+            ->end();
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for

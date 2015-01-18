@@ -9,8 +9,10 @@
 
 namespace PawelLen\DataTablesListing;
 
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormView;
+use PawelLen\DataTablesListing\Column\Columns;
+use PawelLen\DataTablesListing\Column\Type\ListingColumn;
+use PawelLen\DataTablesListing\Filter\Filters;
+
 
 class ListingView
 {
@@ -20,77 +22,158 @@ class ListingView
     protected $name;
 
     /**
-     * @var FormView
+     * @var Columns
      */
-    protected $formView;
+    protected $columns;
+
+    /**
+     * @var Filters
+     */
+    protected $filters;
+
+    /**
+     * @var array
+     */
+    protected $options;
+
+    /**
+     * @var array
+     */
+    protected $data;
 
     /**
      * @var string
      */
-    protected $ajaxSource;
+    protected $templateReference;
+
+
 
     /**
-     * @var array
+     * @param string $name
+     * @param Columns $columns
+     * @param Filters $filters
+     * @param array $options
+     * @param array $data
      */
-    protected $columns;
-    
-    /**
-     * @var array
-     */
-    protected $buttons;
-
-    /**
-     * @param $name
-     * @param $columns
-     * @param FormView $formView
-     * @param $ajaxSource
-     */
-    public function __construct($name, $columns, $buttons, FormView $formView, $ajaxSource) {
-        $this->name = trim($name);
-        $this->formView = $formView;
-        $this->ajaxSource = $ajaxSource;
+    public function __construct($name, Columns $columns, Filters $filters, array $options = array(), array $data = array())
+    {
+        $this->name = $name;
         $this->columns = $columns;
-        $this->buttons = $buttons;
-    }
- 
-    public function getTableHeader() {
-        $header = array();
-        foreach ($this->columns as $name => $column) {
-            $header[$name] = $column['label'];
-        }
-        
-        if($this->buttons){
-            $header['buttons'] = '';
-        }
-
-        return $header;
+        $this->filters = $filters;
+        $this->options = $options;
+        $this->data = $data;
+        $this->templateReference = isset($options['template']) ? $options['template'] : false;
     }
 
-    public function getAjaxSource() {
-        return $this->ajaxSource;
-    }
-
-    /**
-     * @return \Symfony\Component\Form\FormView
-     */
-    public function getFilters() {
-        return $this->formView;
-    }
 
     /**
      * @return string
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function hasFilters() {
-        if ($this->formView->count() > 0) {
 
-            return true;
+    /**
+     * @return array
+     */
+    public function getColumns()
+    {
+        return $this->columns->getColumns();
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getFilters()
+    {
+        return $this->filters->getFilters();
+    }
+
+
+    /**
+     * @return \Symfony\Component\Form\FormView
+     */
+    public function getFiltersFormView()
+    {
+        return $this->filters->getForm()->createView();
+    }
+
+
+    public function getSource()
+    {
+        return $this->options['data_source'];
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function hasFilters()
+    {
+        return $this->filters->count() > 0;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getTemplateReference()
+    {
+        return $this->templateReference;
+    }
+
+
+    public function getData()
+    {
+        return $this->data;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getSettings()
+    {
+        // Columns:
+        $n = 0;
+        $columns = array();
+        /** @var ListingColumn $column */
+        foreach ($this->columns as $column) {
+            $columns[$n++] = array(
+                'searchable'    => $column->isSearchable(),
+                'orderable'     => $column->isSortable(),
+            );
         }
 
-        return false;
+        // Page length options:
+        $lengthMenu = array();
+        foreach ($this->options['page_length_options'] as $option) {
+            $lengthMenu[0][] = $option > 0 ? (int)$option : -1;
+            $lengthMenu[1][] = $option > 0 ? (int)$option : 'All';
+        }
+
+        $settings = array(
+            'pageLength'    => $this->options['page_length'],
+            'columns'       => $columns,
+            'deferLoading'  => $this->options['page_length'] ?: null,
+            'lengthMenu'    => $lengthMenu,
+        );
+
+        return $settings;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getSettingsJson()
+    {
+        $settings = $this->getSettings();
+
+        return json_encode($settings);
     }
 
 }

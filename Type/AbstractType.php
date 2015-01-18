@@ -8,12 +8,13 @@
 
 namespace PawelLen\DataTablesListing\Type;
 
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use PawelLen\DataTablesListing\Listing\ListingBuilderInterface;
-use PawelLen\DataTablesListing\Filters\FilterBuilderInterface;
+use PawelLen\DataTablesListing\Column\ColumnBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use PawelLen\DataTablesListing\Filter\FilterBuilderInterface;
 
 
-abstract class AbstractType implements ListingTypeInterface {
+abstract class AbstractType implements ListingTypeInterface
+{
 
     /**
      * {@inheritdoc}
@@ -22,22 +23,23 @@ abstract class AbstractType implements ListingTypeInterface {
 
     }
 
+
     /**
      * {@inheritdoc}
      */
-    public function buildListing(ListingBuilderInterface $builder, array $options) {
+    public function buildColumns(ColumnBuilderInterface $builder, array $options) {
 
     }
 
+
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function setDefaultOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-
-        ));
+        $resolver->setDefaults(array());
     }
+
 
     /**
      * {@inheritdoc}
@@ -46,6 +48,5 @@ abstract class AbstractType implements ListingTypeInterface {
 
         return 'listing';
     }
-
 
 } 

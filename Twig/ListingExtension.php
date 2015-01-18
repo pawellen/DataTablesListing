@@ -12,43 +12,98 @@ namespace PawelLen\DataTablesListing\Twig;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use PawelLen\DataTablesListing\ListingView;
 
-class ListingExtension extends \Twig_Extension {
+class ListingExtension extends \Twig_Extension
+{
 
+    /**
+     * @var \Twig_Environment
+     */
     protected $environment;
 
-    public function initRuntime(\Twig_Environment $environment) {
+    /**
+     * @var string
+     */
+    protected $defaultTemplate;
+
+
+
+    /**
+     * @param string $defaultTemplate
+     */
+    public function __construct($defaultTemplate)
+    {
+        $this->defaultTemplate = (string)$defaultTemplate;
+    }
+
+
+    /**
+     * @param \Twig_Environment $environment
+     */
+    public function initRuntime(\Twig_Environment $environment)
+    {
         $this->environment = $environment;
     }
 
-    public function getFunctions() {
+
+    /**
+     * @return array
+     */
+    public function getFunctions()
+    {
         return array(
-            'listing' => new \Twig_Function_Method($this, 'listing', array('is_safe' => array('html'))),
-            'listing_scripts' => new \Twig_Function_Method($this, 'listingScripts', array('is_safe' => array('html'))),
+            'render_listing' => new \Twig_Function_Method($this, 'renderListing', array('is_safe' => array('html'))),
+            'render_listing_scripts' => new \Twig_Function_Method($this, 'renderListingScripts', array('is_safe' => array('html'))),
         );
     }
 
-    public function listing(ListingView $listingView) {
-        $template = $this->environment->loadTemplate('DataTablesListingBundle::listing_div_layout.html.twig');
-        
-        return $template->renderBlock('listing', array(
-            'list' => $listingView
-        ));
-    }
 
-    public function listingScripts() {
-        static $isRendered = false;
-        if ($isRendered) {
+    /**
+     * @param ListingView $listingView
+     * @return string
+     */
+    public function renderListing(ListingView $listingView)
+    {
+        /** @var \Twig_Template $template */
+        $template = $this->environment->loadTemplate($this->defaultTemplate);
 
-            return '<!-- Listing scripts already rendered -->';
-        } else {
-            $isRendered = true;
-            $template = $this->environment->loadTemplate('DataTablesListingBundle::listing_div_layout.html.twig');
-
-            return $template->renderBlock('include_listing_header', array());
+        // Override template blocks:
+        $blocks = array();
+        if ($listingView->getTemplateReference()) {
+            /** @var \Twig_Template $childTemplate */
+            $childTemplate = $this->environment->loadTemplate($listingView->getTemplateReference());
+            $blocks = $childTemplate->getBlocks();
         }
+
+        return $template->renderBlock('listing', array(
+            'listing' => $listingView
+        ), $blocks);
     }
 
-    public function getName() {
+
+    /**
+     * @return string
+     */
+    public function renderListingScripts()
+    {
+        static $isRendered = false;
+
+        if (!$isRendered) {
+            /** @var \Twig_Template $template */
+            $template = $this->environment->loadTemplate($this->defaultTemplate);
+            $isRendered = true;
+
+            return $template->renderBlock('listing_assets', array());
+        }
+
+        return '<!-- Listing scripts already rendered -->';
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
         return 'listing_extension';
     }
 

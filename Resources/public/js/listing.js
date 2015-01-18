@@ -26,61 +26,6 @@ var _listing = function() {
         }
     });
 
-    var getLastChunkOfInputName = function(input_name)
-    {
-        var chunks = [];
-        var full_name = input_name + '';
-        var parts = full_name.split('[');
-        for (var i in parts) {
-            var part = parts[i];
-            if (part.substr(-1) == ']') {
-                part = part.substr(0, part.length - 1);
-                chunks.push(part);
-            }
-        }
-
-        return chunks.pop();
-    }
-
-    var pushInputItemsToAjaxData = function(input, aoData) {
-        var value = null;
-        var item = $(input);
-        var type = item.prop('type');
-        var name = 'filter[' + getLastChunkOfInputName(item.attr('name')) + ']';
-        switch (input.nodeName.toLowerCase()) {
-
-            case 'select':
-                if (item.prop('multiple')) {
-                    if (item.val() instanceof Array && item.val().length > 0) {
-                        value = item.val();
-                    }
-                    name = 'filter[' + item.attr('name').replace('[]', '') + ']';
-                } else {
-                    if (item.val() != '' && item.val() != null)
-                        value = item.val();
-                }
-                break;
-
-            case 'input':
-                if (type == 'text' && item.val() !== '') {
-                    value = item.val() + '';
-                } else if (type == 'checkbox' && item.prop('checked')) {
-                    value = item.val();
-                } else if (type == 'radio' && item.prop('checked')) {
-                    value = item.val();
-                }
-                break;
-
-            default:
-                throw new Error('Unknown DOM node tagName "' + input.nodeName.toLowerCase() + '"');
-        }
-
-        if (value !== null) {
-            aoData.push({name: name, value: value});
-        }
-    }
-
-
     var reDrawTableOnFilterInputEvent = function(elementh, table) {
 
         var _refreshTable = function () {
@@ -95,46 +40,62 @@ var _listing = function() {
     }
 
 
-    var initTable = function(tableId, filtersId, initialJson) {
-
+    var initTable = function(tableId, filtersId, settings) {
         var $table = $('#' + tableId);
         var $filters = $('#' + filtersId);
-        var settings = {
-            processing: true,
-            serverSide: true,
-            filter: false,
-            sAjaxSource: $table.data('ajaxsource'),
-            fnServerParams: function (aoData) {
-                $filters.find('input, select').each(function (index, input) {
-                    pushInputItemsToAjaxData(input, aoData);
-                });
+        var ajax_url = $table.data('ajaxsource');
+        var defaultSettings = {
+            processing: true,   // turn on processing loader display when data is loaded/processed
+            serverSide: true,   // turn on ajax source
+            searching: false,   // display build-in search box
+            ajax: {             // ajax options
+                url: ajax_url,
+                data: function (data) {
+                    // Process ajax data before send request to server:
+                    $filters.find('input, select').each(function (index, input) {
+                        var res = getInputNameAndValue(input);
+                        if (res.value !== null) {
+                            data[res.name] = res.value;
+                        }
+                    });
+                    return data;
+                },
+                timeout: 15000,
+                error: function(xhr, textStatus, error) {
+                    if (xhr.status == 401) {
+                        // Reload current window if response status is 401 (Unauthorized), event fired in AjaxAuthenticationListener when user session is expired
+                        window.location.reload();
+                    }
+                }
             },
-            fnDrawCallback: function() {
+            drawCallback: function(settings) {
+                // Process html after re-draw table:
                 if (Math.ceil((this.fnSettings().fnRecordsDisplay()) / this.fnSettings()._iDisplayLength) > 1)  {
                     $('#' + tableId + '_paginate').show();
                 } else {
                     $('#' + tableId + '_paginate').hide();
                 }
-            }
-            /*
-            fnInitComplete: function(oSettings, initialJson) {
-                if (typeof initialJson === 'object')
-                alert( 'DataTables has finished its initialisation.' );
             },
-            data: 'dataSet',
-            columns: (typeof initialData === 'object') ? initialData : []
-            */
+            rowCallback: function(row, data) {
+                // Process single <tr>, after table row is added to DOM:
+                for (var i = 0; i < data.length; i++) {
+                    var td = $(':eq(' + i + ')', row);
+                    td.replaceWith(data[i]);
+                }
 
+                return row;
+            },
+            //pagingType: "scrolling",
+            pageLength: 20
         };
-        if (typeof extendedSetting === 'object') {
-            settings = $.extend(settings, extendedSetting);
-        }
 
-        //console.log(settings);
+
+        // Init table:
+        var settings = $.extend(defaultSettings, settings);
+        console.log('DataTables settings:', settings);
         var table = $table.dataTable(settings);
 
         // Start searching events:
-        //console.log($filters);
         $filters.find("input").on('keyup', function() {
             reDrawTableOnFilterInputEvent(this, table);
         });
@@ -147,6 +108,60 @@ var _listing = function() {
 
         return table;
     }
+
+
+    var getInputNameAndValue = function(input) {
+        var getLastChunkOfInputName = function(input_name)
+        {
+            var chunks = [];
+            var full_name = input_name + '';
+            var parts = full_name.split('[');
+            for (var i in parts) {
+                var part = parts[i];
+                if (part.substr(-1) == ']') {
+                    part = part.substr(0, part.length - 1);
+                    chunks.push(part);
+                }
+            }
+
+            return chunks.pop();
+        }
+
+        var value = null;
+        var item = $(input);
+        var type = item.prop('type');
+        var name = '_filter[' + getLastChunkOfInputName(item.attr('name')) + ']';
+        switch (input.nodeName.toLowerCase()) {
+            case 'select':
+                if (item.prop('multiple')) {
+                    if (item.val() instanceof Array && item.val().length > 0) {
+                        value = item.val();
+                    }
+                    name = '_filter[' + item.attr('name').replace('[]', '') + ']';
+                } else {
+                    if (item.val() != '' && item.val() != null)
+                        value = item.val();
+                }
+                break;
+
+            case 'input':
+                if ((type == 'checkbox' || type == 'radio') && item.prop('checked')) {
+                    value = item.val();
+                } else if (item.val() !== '') {
+                    value = item.val() + '';
+                }
+                break;
+
+            default:
+                throw new Error('Unknown DOM node tagName "' + input.nodeName.toLowerCase() + '"');
+        }
+
+        return {
+            name: name,
+            value: value
+        }
+    }
+
 
     return {
         initTable: initTable

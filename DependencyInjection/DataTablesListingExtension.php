@@ -24,5 +24,8 @@ class DataTablesListingExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+        // Remap parameters:
+        $container->setParameter('data_tables_listing.default_template', $config['default_template']);
     }
 }

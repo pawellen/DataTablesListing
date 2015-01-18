@@ -1,27 +1,65 @@
 
-{% block listing_scripts %}
-    <script type="text/javascript" src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js" charset="utf8"></script>
+{% block listing_header_scripts %}
+    <script type="text/javascript" src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js" charset="utf8"></script>
     <script type="text/javascript" src="{{ asset('bundles/datatableslisting/js/listing.js') }}" charset="utf8"></script>
 {% endblock %}
 
 
-{% block listing_styles %}
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
+{% block listing_header_styles %}
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
 {% endblock %}
 
 
-{% block include_listing_header %}
-{% spaceless %}
-    {{ block('listing_styles') }}
-    {{ block('listing_scripts') }}
-{% endspaceless %}
+{% block listing_assets %}
+    {% spaceless %}
+        {{ block('listing_header_styles') }}
+        {{ block('listing_header_scripts') }}
+    {% endspaceless %}
 {% endblock %}
 
 
-{% block listing_head-%}
+{% block listing_widget_attributes -%}
+    {%- for attrname, attrvalue in attr -%}
+        {{- " " -}}
+        {%- if attrname in ['placeholder', 'title'] -%}
+            {{- attrname }}="{{ attrvalue|trans({}, translation_domain) }}"
+        {%- elseif attrvalue is sameas(true) -%}
+            {{- attrname }}="{{ attrname }}"
+        {%- elseif attrvalue is not sameas(false) -%}
+            {{- attrname }}="{{ attrvalue }}"
+        {%- endif -%}
+    {%- endfor -%}
+{%- endblock listing_widget_attributes %}
+
+
+{%- block listing_header_column -%}
+    <th {{ block('listing_widget_attributes') }}>{{ label|trans }}</th>
+{%- endblock listing_header_column -%}
+
+
+{%- block listing_column -%}
+    {% set _block = block('_column_' ~ column.name) %}
+
+    {% if _block %}
+        {{ _block|raw }}
+    {% else %}
+        <td>{{ value }}</td>
+    {% endif %}
+{%- endblock listing_column -%}
+
+
+{% block listing_head %}
     <thead>
-        {% for name, label in list.tableHeader %}
-        <th>{{ label|trans }}</th>
+        {% for name, column in listing.columns %}
+            {% set label = column.label %}
+            {% set attr = column.attributes %}
+            {% set _block = block('_header_' ~ column.name) %}
+
+            {% if _block %}
+                {{ _block|raw }}
+            {% else %}
+                {{ block('listing_header_column') }}
+            {% endif %}
         {% endfor %}
     </thead>
 {% endblock %}
@@ -29,34 +67,51 @@
 
 {% block listing_body %}
     <tbody>
+    {% if listing.data is not empty%}
+        {% for row in listing.data %}
+            <tr>
+                {% for cell in row %}
+                    {{ cell|raw }}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    {% endif %}
     </tbody>
 {% endblock %}
 
 
+{% block listing_footer %}
+    <tfoot>
+    </tfoot>
+{% endblock %}
+
+
 {% block listing_table %}
-    <table id="listing_table_{{ list.name }}" class="table-bordered table-hover dataTable" data-ajaxsource="{{ list.ajaxSource }}">
+    <table id="listing_table_{{ listing.name }}" class="" data-ajaxsource="{{ listing.source }}">
         {{ block('listing_head') }}
         {{ block('listing_body') }}
+        {{ block('listing_footer') }}
     </table>
 {% endblock %}
 
 
 {% block listing_filters %}
-    <div id="listing_filters_{{ list.name }}">
-        {{ form(list.filters) }}
+    <div id="listing_filters_{{ listing.name }}">
+        {{ form(listing.filtersFormView) }}
     </div>
 {% endblock %}
 
 
 {% block listing %}
 {% spaceless %}
-    {% if list.hasFilters %}
+    {% if listing.hasFilters %}
         {{ block('listing_filters') }}
     {% endif %}
+
     {{ block('listing_table') }}
 
     <script type="text/javascript">
-        var table{{ list.name }} = _listing.initTable('listing_table_{{ list.name }}', 'listing_filters_{{ list.name }}');
+        var table{{ listing.name }} = _listing.initTable('listing_table_{{ listing.name }}', 'listing_filters_{{ listing.name }}', {{ listing.settingsJson|raw }});
     </script>
 {% endspaceless %}
 {% endblock listing %}

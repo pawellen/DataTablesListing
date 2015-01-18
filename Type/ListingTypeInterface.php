@@ -8,13 +8,13 @@
 
 namespace PawelLen\DataTablesListing\Type;
 
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use PawelLen\DataTablesListing\Listing\ListingBuilderInterface;
-use PawelLen\DataTablesListing\Filters\FilterBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use PawelLen\DataTablesListing\Filter\FilterBuilderInterface;
+use PawelLen\DataTablesListing\Column\ColumnBuilderInterface;
 
 
-interface ListingTypeInterface {
-
+interface ListingTypeInterface
+{
     /**
      * @param FilterBuilderInterface $builder
      * @param array $options
@@ -22,19 +22,21 @@ interface ListingTypeInterface {
      */
     public function buildFilters(FilterBuilderInterface $builder, array $options);
 
+
     /**
-     * @param ListingBuilderInterface $builder
+     * @param ColumnBuilderInterface $builder
      * @param array $options
      * @return mixed
      */
-    public function buildListing(ListingBuilderInterface $builder, array $options);
+    public function buildColumns(ColumnBuilderInterface $builder, array $options);
 
 
     /**
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      * @return mixed
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver);
+    public function setDefaultOptions(OptionsResolver $resolver);
+
 
     /**
      * @return string

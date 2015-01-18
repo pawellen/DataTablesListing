@@ -6,9 +6,17 @@ services:
             registry: "@doctrine"
             router: "@router"
             eventDispatcher: "@event_dispatcher"
+            environment: "@twig"
+            defaultTemplate: "%data_tables_listing.default_template%"
 
     listing.extension:
         class: PawelLen\DataTablesListing\Twig\ListingExtension
+        arguments:
+            defaultTemplate: "%data_tables_listing.default_template%"
         tags:
             - { name: twig.extension }
 
+    listing.ajax_authentication_listener:
+        class: PawelLen\DataTablesListing\EventListener\AjaxAuthenticationListener
+        tags:
+          - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 999 }
