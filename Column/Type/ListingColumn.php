@@ -8,11 +8,12 @@
 
 namespace PawelLen\DataTablesListing\Column\Type;
 
-
 use Symfony\Component\PropertyAccess\PropertyAccess;
+
 
 class ListingColumn extends ListingColumnType
 {
+
     /**
      * @param string $name
      * @param array $options
