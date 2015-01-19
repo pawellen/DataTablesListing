@@ -102,6 +102,9 @@ class ListingView
     }
 
 
+    /**
+     * @return string
+     */
     public function getSource()
     {
         return $this->options['data_source'];
@@ -126,6 +129,9 @@ class ListingView
     }
 
 
+    /**
+     * @return array
+     */
     public function getData()
     {
         return $this->data;
@@ -138,28 +144,20 @@ class ListingView
     public function getSettings()
     {
         // Columns:
-        $n = 0;
         $columns = array();
         /** @var ListingColumn $column */
         foreach ($this->columns as $column) {
-            $columns[$n++] = array(
+            $columns[] = array(
                 'searchable'    => $column->isSearchable(),
                 'orderable'     => $column->isSortable(),
             );
-        }
-
-        // Page length options:
-        $lengthMenu = array();
-        foreach ($this->options['page_length_options'] as $option) {
-            $lengthMenu[0][] = $option > 0 ? (int)$option : -1;
-            $lengthMenu[1][] = $option > 0 ? (int)$option : 'All';
         }
 
         $settings = array(
             'pageLength'    => $this->options['page_length'],
             'columns'       => $columns,
             'deferLoading'  => $this->options['page_length'] ?: null,
-            'lengthMenu'    => $lengthMenu,
+            'lengthMenu'    => $this->options['page_length_menu'],
         );
 
         return $settings;

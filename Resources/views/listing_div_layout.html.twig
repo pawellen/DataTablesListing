@@ -131,7 +131,7 @@
     {{ block('listing_table') }}
 
     <script type="text/javascript">
-        var table{{ listing.name }} = _listing.initTable('listing_table_{{ listing.name }}', 'listing_filters_{{ listing.name }}', {{ listing.settingsJson|raw }});
+        var table{{ listing.name }} = DataTablesListing.initTable('listing_table_{{ listing.name }}', 'listing_filters_{{ listing.name }}', {{ listing.settingsJson|raw }});
     </script>
 {% endspaceless %}
 {% endblock listing %}

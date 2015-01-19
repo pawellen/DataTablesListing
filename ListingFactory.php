@@ -8,7 +8,6 @@
 
 namespace PawelLen\DataTablesListing;
 
-use PawelLen\DataTablesListing\Renderer\ListingRendererInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\OptionsResolver\Options;
@@ -18,6 +17,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use PawelLen\DataTablesListing\Column\ColumnBuilder;
 use PawelLen\DataTablesListing\Type\ListingTypeInterface;
 use PawelLen\DataTablesListing\Filter\FilterBuilder;
+use PawelLen\DataTablesListing\Renderer\ListingRendererInterface;
 
 
 class ListingFactory
@@ -43,6 +43,7 @@ class ListingFactory
     protected $renderer;
 
 
+
     /**
      * @param FormFactoryInterface $formFactory
      * @param RegistryInterface $registry
@@ -56,6 +57,7 @@ class ListingFactory
         $this->eventDispatcher = $eventDispatcher;
         $this->renderer = $renderer;
     }
+
 
     /**
      * @param ListingTypeInterface $type
@@ -73,6 +75,16 @@ class ListingFactory
             }
 
             return $data_source;
+        };
+
+        $pageLengthMenuOptionsNormalizer = function(Options $options, $value) {
+            $lengthMenu = array();
+            foreach ($value as $length) {
+                $lengthMenu[0][] = $length > 0 ? (int)$length : -1;
+                $lengthMenu[1][] = $length > 0 ? (int)$length : '-';
+            }
+
+            return $lengthMenu;
         };
 
         $columnBuilder = $this->createColumnBuilder($type, $options);
@@ -96,7 +108,10 @@ class ListingFactory
             'data_source'   => $dataSourceResolver,
             'date_format'   => 'd-m-Y H:i:s',
             'page_length'   => 10,
-            'page_length_options'  => array(2, 10, 25, 50, -1)
+            'page_length_menu'  => array(2, 10, 25, 50, -1)
+        ));
+        $optionsResolver->setNormalizers(array(
+            'page_length_menu' => $pageLengthMenuOptionsNormalizer
         ));
 
         // Modify default options by ListingType:

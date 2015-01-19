@@ -2,7 +2,7 @@
  * Created by pawel on 22.07.14.
  */
 
-var _listing = (function() {
+(function(self) {
 
     var ajaxSearchDelay = 450;
     var typingTimer;
@@ -40,16 +40,16 @@ var _listing = (function() {
     }
 
 
-    var initTable = function(tableId, filtersId, settings) {
+    self.initTable = function(tableId, filtersId, settings) {
         var $table = $('#' + tableId);
         var $filters = $('#' + filtersId);
-        var ajax_url = $table.data('ajaxsource');
+        var url = $table.data('ajaxsource');
         var defaultSettings = {
             processing: true,   // turn on processing loader display when data is loaded/processed
             serverSide: true,   // turn on ajax source
             searching: false,   // display build-in search box
             ajax: {             // ajax options
-                url: ajax_url,
+                url: url,
                 data: function (data) {
                     // Process ajax data before send request to server:
                     $filters.find('input, select').each(function (index, input) {
@@ -113,12 +113,12 @@ var _listing = (function() {
 
 
     var getInputNameAndValue = function(input) {
-        var getLastChunkOfInputName = function(input_name)
+        var getLastChunkOfInputName = function(name)
         {
             var chunks = [];
-            var full_name = input_name + '';
-            var parts = full_name.split('[');
-            for (var i in parts) {
+            var name = name + '';
+            var parts = name.split('[');
+            for (var i=0; i < parts.length; i++) {
                 var part = parts[i];
                 if (part.substr(-1) === ']') {
                     part = part.substr(0, part.length - 1);
@@ -132,29 +132,22 @@ var _listing = (function() {
         var item = $(input);
         var type = item.prop('type');
         var name = '_filter[' + getLastChunkOfInputName(item.attr('name')) + ']';
+        var nodeName = input.nodeName.toLowerCase();
         var value = null;
-        switch (input.nodeName.toLowerCase()) {
-            case 'select':
-                if (item.prop('multiple')) {
-                    if (item.val() instanceof Array && item.val().length > 0) {
-                        value = item.val();
-                    }
-                    name = '_filter[' + item.attr('name').replace('[]', '') + ']';
-                } else if (item.val()) {
-                    value = item.val();
-                }
-                break;
 
-            case 'input':
-                if ((type === 'checkbox' || type === 'radio') && item.prop('checked')) {
-                    value = item.val();
-                } else if (item.val()) {
-                    value = '' + item.val();
-                }
-                break;
-
-            default:
-                throw new Error('Unknown DOM node tagName "' + input.nodeName.toLowerCase() + '"');
+        // Detect value and name:
+        if (nodeName === 'select' && item.prop('multiple')) {
+            if (item.val() instanceof Array && item.val().length > 0) {
+                value = item.val();
+            }
+            name = '_filter[' + item.attr('name').replace('[]', '') + ']';
+        }
+        else if ((type === 'checkbox' || type === 'radio')) {
+            if (item.prop('checked')) {
+                value = item.val();
+            }
+        } else {
+            value = '' + item.val();
         }
 
         return {
@@ -162,9 +155,4 @@ var _listing = (function() {
             value: value
         }
     }
-
-
-    return {
-        initTable: initTable
-    }
-})();
+}(this.DataTablesListing = this.DataTablesListing || {}));
