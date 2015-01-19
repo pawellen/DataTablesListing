@@ -1,10 +1,19 @@
 language: php
+
 php:
-  - "5.5"
-  - "5.4"
-  - "5.3"
+  - 5.3
+  - 5.4
+  - 5.5
+
+env:
+  - SYMFONY_VERSION=origin/master
 
 before_script:
-  - curl -sS https://getcomposer.org/installer | php
+  - curl -s http://getcomposer.org/installer | php
   - php composer.phar install
 
+#script: phpunit
+
+notifications:
+    email:
+        - pawel.len@gmail.com
