@@ -1,5 +1,6 @@
 DataTables Listing plugin
 ===
+[![Codacy Badge](https://www.codacy.com/project/badge/6b4d2145ccb24f52a909290d33803aed)](https://www.codacy.com/public/pawellen/DataTablesListing)
 
 Data tables listing plugin allow you to easy creating record list, using Symfony forms style. This plugin use popular JQuery DataTables plug (http://www.datatables.net/)
 
