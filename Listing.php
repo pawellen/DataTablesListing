@@ -196,7 +196,7 @@ class Listing
 
         // Execute query using paginator:
         $data = array();
-        $paginator = new Paginator($queryBuilder->getQuery(), $fetchJoin = true);
+        $paginator = new Paginator($queryBuilder->getQuery(), true);
         $this->firstResultsOffset = $limit;
         $this->allResultsCount = count($paginator);
         foreach ($paginator as $row) {
