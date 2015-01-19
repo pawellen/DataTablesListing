@@ -2,26 +2,26 @@
  * Created by pawel on 22.07.14.
  */
 
-var _listing = function() {
+var _listing = (function() {
 
     var ajaxSearchDelay = 450;
     var typingTimer;
     $.extend($.fn.dataTable.defaults, {
-        "language": {
-            "processing": '<div id="ico_loader"><i class="icon-2x icon-spinner icon-spin"></i><div>',
-            "lengthMenu": "Pokaż _MENU_ pozycji",
-            "zeroRecords": "Zmodyfikuj kryteria wyszukiwania, aby zobaczyć wyniki",
-            "emptyTable": "Zmodyfikuj kryteria wyszukiwania, aby zobaczyć wyniki",
-            "info": "Pozycje od _START_ do _END_ z _TOTAL_ łącznie",
-            "infoEmpty": "Pozycji 0 z 0 dostępnych",
-            "infoFiltered": "(filtrowanie spośród _MAX_ dostępnych pozycji)",
-            "infoPostFix": "",
-            "search": "Szukaj:",
-            "paginate": {
-                "first": "Pierwsza",
-                "previous": "Poprzednia",
-                "next": "Następna",
-                "last": "Ostatnia"
+        language: {
+            processing: '<div id="ico_loader"><i class="icon-2x icon-spinner icon-spin"></i><div>',
+            lengthMenu: 'Pokaż _MENU_ pozycji',
+            zeroRecord: 'Zmodyfikuj kryteria wyszukiwania, aby zobaczyć wyniki',
+            emptyTable: 'Zmodyfikuj kryteria wyszukiwania, aby zobaczyć wyniki',
+            info: 'Pozycje od _START_ do _END_ z _TOTAL_ łącznie',
+            infoEmpty: 'Pozycji 0 z 0 dostępnych',
+            infoFiltered: '(filtrowanie spośród _MAX_ dostępnych pozycji)',
+            infoPostFix: '',
+            search: 'Szukaj:',
+            paginate: {
+                first: 'Pierwsza',
+                previous: 'Poprzednia',
+                next: 'Następna',
+                last: 'Ostatnia'
             }
         }
     });
@@ -31,7 +31,7 @@ var _listing = function() {
         var _refreshTable = function () {
             table._fnDraw();
         };
-        if (elementh.type == 'text') {
+        if (elementh.type === 'text') {
             clearTimeout(typingTimer);
             typingTimer = setTimeout(_refreshTable, ajaxSearchDelay);
         } else {
@@ -62,7 +62,7 @@ var _listing = function() {
                 },
                 timeout: 15000,
                 error: function(xhr, textStatus, error) {
-                    if (xhr.status == 401) {
+                    if (xhr.status === 401) {
                         // Reload current window if response status is 401 (Unauthorized), event fired in AjaxAuthenticationListener when user session is expired
                         window.location.reload();
                     }
@@ -87,24 +87,24 @@ var _listing = function() {
                 return row;
             },
             */
-            //pagingType: "scrolling",
+            //pagingType: "scrolling',
             pageLength: 20
         };
 
 
         // Init table:
-        var settings = $.extend(defaultSettings, settings);
+        settings = $.extend(defaultSettings, settings);
         console.log('DataTables settings:', settings);
         var table = $table.dataTable(settings);
 
         // Start searching events:
-        $filters.find("input").on('keyup', function() {
+        $filters.find('input').on('keyup', function() {
             reDrawTableOnFilterInputEvent(this, table);
         });
-        $filters.find("select, input[type='checkbox']").on('change', function() {
+        $filters.find('select, input[type=\'checkbox\']').on('change', function() {
             reDrawTableOnFilterInputEvent(this, table);
         });
-        $filters.find(".datepicker").on('dp.change', function() {
+        $filters.find('.datepicker').on('dp.change', function() {
             reDrawTableOnFilterInputEvent(this, table);
         });
 
@@ -120,7 +120,7 @@ var _listing = function() {
             var parts = full_name.split('[');
             for (var i in parts) {
                 var part = parts[i];
-                if (part.substr(-1) == ']') {
+                if (part.substr(-1) === ']') {
                     part = part.substr(0, part.length - 1);
                     chunks.push(part);
                 }
@@ -141,13 +141,13 @@ var _listing = function() {
                     }
                     name = '_filter[' + item.attr('name').replace('[]', '') + ']';
                 } else {
-                    if (item.val() != '' && item.val() != null)
+                    if (item.val())
                         value = item.val();
                 }
                 break;
 
             case 'input':
-                if ((type == 'checkbox' || type == 'radio') && item.prop('checked')) {
+                if ((type === 'checkbox' || type === 'radio') && item.prop('checked')) {
                     value = item.val();
                 } else if (item.val() !== '') {
                     value = item.val() + '';
@@ -168,4 +168,4 @@ var _listing = function() {
     return {
         initTable: initTable
     }
-}();
+})();

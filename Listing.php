@@ -175,9 +175,9 @@ class Listing
     protected function loadData(array $parameters, array $filters = array())
     {
         // Load DataTables parameters:
-        $orderColumnDefs     = isset($parameters['order']) && is_array($parameters['order']) ? $parameters['order'] : null;
-        $limit              = isset($parameters['length']) && $parameters['length']>0 ? (int)$parameters['length'] : 0;
-        $offset             = isset($parameters['start'])  && $parameters['start']>0  ? (int)$parameters['start']  : 0;
+        $limit                  = isset($parameters['length']) && $parameters['length']>0 ? (int)$parameters['length'] : 0;
+        $offset                 = isset($parameters['start'])  && $parameters['start']>0  ? (int)$parameters['start']  : 0;
+        $orderColumnDefinitions = isset($parameters['order']) && is_array($parameters['order']) ? $parameters['order'] : null;
 
         // Create QueryBuilder:
         $queryBuilder = $this->createQueryBuilder();
@@ -186,25 +186,7 @@ class Listing
         $this->applyFilters($queryBuilder, $filters);
 
         // Sorting:
-        if ($orderColumnDefs) {
-            foreach ($orderColumnDefs as $orderColumnDef) {
-                $orderColumn = $this->columns->getByIndex($orderColumnDef['column']);
-                if ($orderColumn instanceof ListingColumnTypeInterface && $orderColumn->isSortable()) {
-                    $options = $orderColumn->getOptions();
-                    if (isset($options['order_by'])) {
-                        $orderProperty = $options['order_by'];
-                    } else {
-                        $orderProperty = $this->getRootAliasFieldName($queryBuilder, $orderColumn->getName());
-                    }
-                    $orderDirection = $orderColumnDef['dir'] == 'desc' ? 'DESC' : 'ASC';
-                    $queryBuilder->addOrderBy($orderProperty, $orderDirection);
-                }
-
-            }
-        } elseif (isset($this->options['order_by'])) {
-            $orderDirection = isset($this->options['order_direction']) ? $this->options['order_direction'] : 'ASC';
-            $queryBuilder->orderBy($this->options['order_by'], $orderDirection);
-        }
+        $this->applySorting($queryBuilder, $orderColumnDefinitions);
 
         // Pagination:
         if ($limit > 0) {
@@ -322,6 +304,35 @@ class Listing
                 }
                 $queryBuilder->setParameter(':arg_id', '%' . $value . '%');
             }
+        }
+    }
+
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param null $orderColumnDefinitions
+     * @throws \Exception
+     */
+    protected function applySorting(QueryBuilder $queryBuilder, $orderColumnDefinitions = null)
+    {
+        if ($orderColumnDefinitions) {
+            foreach ($orderColumnDefinitions as $orderColumnDef) {
+                $orderColumn = $this->columns->getByIndex($orderColumnDef['column']);
+                if ($orderColumn instanceof ListingColumnTypeInterface && $orderColumn->isSortable()) {
+                    $options = $orderColumn->getOptions();
+                    if (isset($options['order_by'])) {
+                        $orderProperty = $options['order_by'];
+                    } else {
+                        $orderProperty = $this->getRootAliasFieldName($queryBuilder, $orderColumn->getName());
+                    }
+                    $orderDirection = $orderColumnDef['dir'] == 'desc' ? 'DESC' : 'ASC';
+                    $queryBuilder->addOrderBy($orderProperty, $orderDirection);
+                }
+
+            }
+        } elseif (isset($this->options['order_by'])) {
+            $orderDirection = isset($this->options['order_direction']) ? $this->options['order_direction'] : 'ASC';
+            $queryBuilder->orderBy($this->options['order_by'], $orderDirection);
         }
     }
 
