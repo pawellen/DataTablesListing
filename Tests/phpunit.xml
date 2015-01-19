@@ -9,12 +9,14 @@
     <testsuites>
         <testsuite name="Pawellen\DataTablesListing Test Suite">
             <directory>./Tests</directory>
+            <directory>./</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
             <directory>./Tests</directory>
+            <directory>./</directory>
         </whitelist>
     </filter>
 </phpunit>
