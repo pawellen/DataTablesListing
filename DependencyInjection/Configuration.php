@@ -18,7 +18,8 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('data_tables_listing')
+        $rootNode = $treeBuilder->root('data_tables_listing');
+        $rootNode
             ->children()
                 ->arrayNode('include_assets')
                     ->addDefaultsIfNotSet()
