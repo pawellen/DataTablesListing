@@ -115,8 +115,8 @@
     var getInputNameAndValue = function(input) {
         var getLastChunkOfInputName = function(name)
         {
+            name = name + '';
             var chunks = [];
-            var name = name + '';
             var parts = name.split('[');
             for (var i=0; i < parts.length; i++) {
                 var part = parts[i];
