@@ -195,15 +195,15 @@ class Listing
         }
 
         // Execute query using paginator:
-        $data = array();
         $paginator = new Paginator($queryBuilder->getQuery(), true);
         $this->firstResultsOffset = $limit;
         $this->allResultsCount = count($paginator);
+        $processRowCallback = isset($this->options['process_row_callback']) && is_callable($this->options['process_row_callback']);
+
+        // Fill data array:
+        $data = array();
         foreach ($paginator as $row) {
-            if (isset($this->options['process_row_callback']) && is_callable($this->options['process_row_callback'])) {
-                $row = $this->options['process_row_callback']($row);
-            }
-            $data[] = $row;
+            $data[] = $processRowCallback ? $this->options['process_row_callback']($row) : $row;
         }
 
         // Process result event:
