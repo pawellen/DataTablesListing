@@ -129,10 +129,10 @@ var _listing = (function() {
             return chunks.pop();
         }
 
-        var value = null;
         var item = $(input);
         var type = item.prop('type');
         var name = '_filter[' + getLastChunkOfInputName(item.attr('name')) + ']';
+        var value = null;
         switch (input.nodeName.toLowerCase()) {
             case 'select':
                 if (item.prop('multiple')) {
@@ -140,17 +140,16 @@ var _listing = (function() {
                         value = item.val();
                     }
                     name = '_filter[' + item.attr('name').replace('[]', '') + ']';
-                } else {
-                    if (item.val())
-                        value = item.val();
+                } else if (item.val()) {
+                    value = item.val();
                 }
                 break;
 
             case 'input':
                 if ((type === 'checkbox' || type === 'radio') && item.prop('checked')) {
                     value = item.val();
-                } else if (item.val() !== '') {
-                    value = item.val() + '';
+                } else if (item.val()) {
+                    value = '' + item.val();
                 }
                 break;
 
