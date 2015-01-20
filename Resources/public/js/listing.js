@@ -37,7 +37,7 @@
         } else {
             _refreshTable();
         }
-    }
+    };
 
 
     self.initTable = function(tableId, filtersId, settings) {
@@ -77,16 +77,16 @@
                 }
             },
             /*
-            rowCallback: function(row, data) {
-                // Process single <tr>, after table row is added to DOM:
-                for (var i = 0; i < data.length; i++) {
-                    var td = $(':eq(' + i + ')', row);
-                    td.replaceWith('-');
-                }
+             rowCallback: function(row, data) {
+             // Process single <tr>, after table row is added to DOM:
+             for (var i = 0; i < data.length; i++) {
+             var td = $(':eq(' + i + ')', row);
+             td.replaceWith('-');
+             }
 
-                return row;
-            },
-            */
+             return row;
+             },
+             */
             //pagingType: "scrolling',
             pageLength: 20
         };
@@ -115,8 +115,8 @@
     var getInputNameAndValue = function(input) {
         var getLastChunkOfInputName = function(name)
         {
-            name = name + '';
             var chunks = [];
+            var name = name + '';
             var parts = name.split('[');
             for (var i=0; i < parts.length; i++) {
                 var part = parts[i];

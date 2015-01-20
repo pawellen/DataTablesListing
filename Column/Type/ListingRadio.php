@@ -9,7 +9,7 @@
 namespace PawelLen\DataTablesListing\Column\Type;
 
 
-class ListingCheckbox extends ListingColumnType
+class ListingRadio extends ListingColumnType
 {
     /**
      * @param string $name
@@ -40,7 +40,7 @@ class ListingCheckbox extends ListingColumnType
      */
     public function getType()
     {
-        return 'checkbox';
+        return 'radio';
     }
 
 }

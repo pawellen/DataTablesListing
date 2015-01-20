@@ -56,7 +56,8 @@ class ColumnBuilder implements ColumnBuilderInterface
      * @param string $name
      * @param string $type
      * @param array $options
-     * @return ListingColumnTypeInterface
+     * @return mixed
+     * @throws UnexpectedTypeException
      * @throws \Exception
      */
     public function create($name, $type, array $options = array())
@@ -77,8 +78,9 @@ class ColumnBuilder implements ColumnBuilderInterface
 
 
     /**
-     * @param string $name
-     * @param string $class
+     * @param $name
+     * @param $class
+     * @throws UnexpectedTypeException
      */
     public function addType($name, $class)
     {

@@ -11,7 +11,6 @@ namespace PawelLen\DataTablesListing\Column\Type;
 
 class ListingButton extends ListingColumnType
 {
-
     /**
      * @param string $name
      * @param array $options

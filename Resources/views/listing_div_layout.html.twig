@@ -1,3 +1,4 @@
+
 {% block listing_header_scripts %}
     {% if include_jquery and jquery_js %}
         <script type="text/javascript" src="{{ jquery_js }}" charset="utf8"></script>
@@ -65,6 +66,32 @@
         </td>
     {% endif %}
 {%- endblock listing_button -%}
+
+
+{%- block listing_checkbox -%}
+    {% set _block = block('_checkbox_' ~ column.name) %}
+
+    {% if _block %}
+        {{ _block|raw }}
+    {% else %}
+        <td>
+            <input type="checkbox" name="{{ name }}[]" value="{{ value }}" />
+        </td>
+    {% endif %}
+{%- endblock listing_checkbox -%}
+
+
+{%- block listing_radio -%}
+    {% set _block = block('_radio_' ~ column.name) %}
+
+    {% if _block %}
+        {{ _block|raw }}
+    {% else %}
+        <td>
+            <input type="radio" name="{{ name }}" value="{{ value }}" />
+        </td>
+    {% endif %}
+{%- endblock listing_radio -%}
 
 
 {% block listing_head %}

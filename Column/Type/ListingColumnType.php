@@ -8,8 +8,8 @@
 
 namespace PawelLen\DataTablesListing\Column\Type;
 
-
 use Symfony\Component\PropertyAccess\PropertyAccess;
+
 
 abstract class ListingColumnType implements ListingColumnTypeInterface
 {
