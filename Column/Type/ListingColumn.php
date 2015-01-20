@@ -51,8 +51,9 @@ class ListingColumn extends ListingColumnType
 
         return array(
             'value' => $value,
-            'row' => $row,
-            'name' => $this->name
+            'options' => $this->options,
+            'name' => $this->name,
+            'row' => $row
         );
     }
 

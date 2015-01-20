@@ -34,9 +34,11 @@ class ListingButton extends ListingColumnType
         }
 
         return array(
-            'label' => $this->options['label'],
             'route' => $this->options['route'],
             'parameters' => $parameters,
+            'options' => $this->options,
+            'name' => $this->name,
+            'label' => $this->options['label'],
         );
     }
 
