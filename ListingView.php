@@ -158,6 +158,7 @@ class ListingView
             'columns'       => $columns,
             'deferLoading'  => $this->options['page_length'] ?: null,
             'lengthMenu'    => $this->options['page_length_menu'],
+            'autoWidth'    => $this->options['auto_width'],
         );
 
         return $settings;

@@ -105,10 +105,11 @@ class ListingFactory
             'order_direction'
         ));
         $optionsResolver->setDefaults(array(
-            'data_source'   => $dataSourceResolver,
-            'date_format'   => 'd-m-Y H:i:s',
-            'page_length'   => 10,
-            'page_length_menu'  => array(2, 10, 25, 50, -1)
+            'data_source'       => $dataSourceResolver,
+            'date_format'       => 'd-m-Y H:i:s',
+            'page_length'       => 10,
+            'page_length_menu'  => array(2, 10, 25, 50, -1),
+            'auto_width'        => true
         ));
         $optionsResolver->setNormalizers(array(
             'page_length_menu' => $pageLengthMenuOptionsNormalizer
