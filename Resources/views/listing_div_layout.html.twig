@@ -50,7 +50,13 @@
     {% if _block %}
         {{ _block|raw }}
     {% else %}
-        <td>{{ value }}</td>
+        <td>
+            {% if options.route is not empty %}
+                <a href="{{ path(options.route, options.route_parameters) }}">{{ value }}</a>
+            {% else %}
+                {{ value }}
+            {% endif %}
+        </td>
     {% endif %}
 {%- endblock listing_column -%}
 
