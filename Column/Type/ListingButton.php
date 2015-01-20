@@ -26,6 +26,7 @@ class ListingButton extends ListingColumnType
      */
     public function getValues($row)
     {
+        // Build parameters:
         $parameters = array();
         if (isset($this->options['parameters'])) {
             foreach ($this->options['parameters'] as $name => $propertyPath) {

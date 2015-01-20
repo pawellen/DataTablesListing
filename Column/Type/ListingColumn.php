@@ -49,8 +49,17 @@ class ListingColumn extends ListingColumnType
             $value = $this->options['callback']($value, $row, $this);
         }
 
+        // Build parameters:
+        $parameters = array();
+        if (isset($this->options['parameters'])) {
+            foreach ($this->options['parameters'] as $name => $propertyPath) {
+                $parameters[$name] = $this->getPropertyValue($row, $propertyPath);
+            }
+        }
+
         return array(
             'value' => $value,
+            'parameters' => $parameters,
             'options' => $this->options,
             'name' => $this->name,
             'row' => $row

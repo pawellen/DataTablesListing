@@ -52,7 +52,7 @@
     {% else %}
         <td>
             {% if options.route is defined %}
-                <a href="{{ path(options.route, options.route_parameters) }}">{{ value }}</a>
+                <a href="{{ path(options.route, parameters) }}">{{ value }}</a>
             {% else %}
                 {{ value }}
             {% endif %}

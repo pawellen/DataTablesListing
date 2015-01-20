@@ -28,9 +28,18 @@ class ListingRadio extends ListingColumnType
     {
         $value = $this->getPropertyValue($row, isset($this->options['property']) ? $this->options['property'] : $this->name);
 
+        // Build parameters:
+        $parameters = array();
+        if (isset($this->options['parameters'])) {
+            foreach ($this->options['parameters'] as $name => $propertyPath) {
+                $parameters[$name] = $this->getPropertyValue($row, $propertyPath);
+            }
+        }
+
         return array(
             'name' => $this->name,
-            'value' => $value
+            'value' => $value,
+            'parameters' => $parameters
         );
     }
 

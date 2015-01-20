@@ -184,7 +184,7 @@ class ListingRenderer implements ListingRendererInterface
      * @param $row
      * @param array $options
      * @return string
-     */
+     *
     protected function transformValue($value, $row, array $options = array())
     {
         if (isset($options['route'])) {
@@ -201,7 +201,7 @@ class ListingRenderer implements ListingRendererInterface
 
         return $value;
     }
-
+*/
 
     /**
      * @inheritdoc
