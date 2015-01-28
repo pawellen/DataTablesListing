@@ -102,14 +102,28 @@ class ListingFactory
             'process_result_callback',
             'process_row_callback',
             'order_by',
-            'order_direction'
+            'order_direction',
         ));
+        /**
+         * tr options:
+        'tr' => array(
+            'id' => null,
+            'class' => null,
+        ),
+
+         */
         $optionsResolver->setDefaults(array(
             'data_source'       => $dataSourceResolver,
             'date_format'       => 'd-m-Y H:i:s',
             'page_length'       => 10,
-            'page_length_menu'  => array(2, 10, 25, 50, -1),
-            'auto_width'        => true
+            'page_length_menu'  => array(10, 25, 50, 100, -1),
+            'auto_width'        => true,
+            'tr'                => array(
+                'id'    => null,
+                'class' => null
+            ),
+            'order_column'      => array(),
+            'save_state'        => false
         ));
         $optionsResolver->setNormalizers(array(
             'page_length_menu' => $pageLengthMenuOptionsNormalizer

@@ -29,7 +29,7 @@
     var reDrawTableOnFilterInputEvent = function(elementh, table) {
 
         var _refreshTable = function () {
-            table._fnDraw();
+            table.draw();
         };
         if (elementh.type === 'text') {
             clearTimeout(typingTimer);
@@ -76,17 +76,56 @@
                     $('#' + tableId + '_paginate').hide();
                 }
             },
-            /*
-             rowCallback: function(row, data) {
-             // Process single <tr>, after table row is added to DOM:
-             for (var i = 0; i < data.length; i++) {
-             var td = $(':eq(' + i + ')', row);
-             td.replaceWith('-');
-             }
+            rowCallback: function(row, data) {
 
-             return row;
-             },
-             */
+                /*
+                // TOP TOP
+                $('>', row).each(function(index, td) {
+                    console.log(index, typeof data[index])
+                    $(td).replaceWith('<th>'+data[index]+'</th>');
+                    //console.log(index, value)
+                });
+                */
+
+                /*
+                for (var i = 0; i < data.length; i++) {
+                    var td = $(':eq(' + i + ')', row);
+                    td.replaceWith('<th>sdfsdf</th>');
+                    //var tdClass = td.attr('class');
+                    console.log('run');
+                    //var newTd = $(data[i]);
+                    //newTd.addClass(tdClass);
+                    //td.replaceWith(newTd);
+                }
+                */
+                /*
+                for (var i = 0; i < data.length; i++) {
+                    var td = $(':eq(' + i + ')', row);
+                    //console.log(td);
+                    td.replaceWith('<th>'+data[i]+'</th>');
+                }
+                */
+
+
+
+                return row;
+            },
+            createdRow: function(row, data, dataIndex) {
+                if (typeof data._isAjax !== 'undefined' && data._isAjax) {
+                    // Process single <tr>, after table row is added to add custom td html:
+                    $('>', row).each(function(index, originalTd) {
+                        var $td = $(data[index]);
+                        var $originalTd = $(originalTd);
+                        // Copy all attributes:
+                        $.each($td.prop("attributes"), function() {
+                            $originalTd.attr(this.name, this.value);
+                        });
+                        $originalTd.html($td.html());
+                    });
+                }
+
+                //return row;
+            },
             //pagingType: "scrolling',
             pageLength: 20
         };
@@ -95,7 +134,7 @@
         // Init table:
         settings = $.extend(defaultSettings, settings);
         console.log('DataTables settings:', settings);
-        var table = $table.dataTable(settings);
+        var table = $table.DataTable(settings);
 
         // Start searching events:
         $filters.find('input').on('keyup', function() {

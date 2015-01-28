@@ -45,6 +45,7 @@
 
 
 {%- block listing_column -%}
+{% spaceless %}
     {% set _block = block('_column_' ~ column.name) %}
 
     {% if _block %}
@@ -58,10 +59,12 @@
             {% endif %}
         </td>
     {% endif %}
+{% endspaceless %}
 {%- endblock listing_column -%}
 
 
 {%- block listing_button -%}
+{% spaceless %}
     {% set _block = block('_button_' ~ column.name) %}
 
     {% if _block %}
@@ -71,10 +74,12 @@
             <a href="{{ path(route, parameters) }}">{{ label|trans }}</a>
         </td>
     {% endif %}
+{% endspaceless %}
 {%- endblock listing_button -%}
 
 
 {%- block listing_checkbox -%}
+{% spaceless %}
     {% set _block = block('_checkbox_' ~ column.name) %}
 
     {% if _block %}
@@ -84,10 +89,12 @@
             <input type="checkbox" name="{{ name }}[]" value="{{ value }}" />
         </td>
     {% endif %}
+{% endspaceless %}
 {%- endblock listing_checkbox -%}
 
 
 {%- block listing_radio -%}
+{% spaceless %}
     {% set _block = block('_radio_' ~ column.name) %}
 
     {% if _block %}
@@ -97,7 +104,10 @@
             <input type="radio" name="{{ name }}" value="{{ value }}" />
         </td>
     {% endif %}
+{% endspaceless %}
 {%- endblock listing_radio -%}
+
+
 
 
 {% block listing_head %}
@@ -122,8 +132,10 @@
     {% if listing.data is not empty%}
         {% for row in listing.data %}
             <tr>
-                {% for cell in row %}
-                    {{ cell|raw }}
+                {% for key, cell in row %}
+                    {%  if key != 'DT_RowId' %}
+                        {{ cell|raw }}
+                    {% endif %}
                 {% endfor %}
             </tr>
         {% endfor %}

@@ -46,6 +46,10 @@ class ListingView
      */
     protected $templateReference;
 
+    /**
+     * @var int
+     */
+    protected $allResultCount;
 
 
     /**
@@ -55,7 +59,7 @@ class ListingView
      * @param array $options
      * @param array $data
      */
-    public function __construct($name, Columns $columns, Filters $filters, array $options = array(), array $data = array())
+    public function __construct($name, Columns $columns, Filters $filters, array $options = array(), array $data = array(), $allResultCount = null)
     {
         $this->name = $name;
         $this->columns = $columns;
@@ -63,6 +67,7 @@ class ListingView
         $this->options = $options;
         $this->data = $data;
         $this->templateReference = isset($options['template']) ? $options['template'] : null;
+        $this->allResultCount = (int)$allResultCount;
     }
 
 
@@ -156,9 +161,11 @@ class ListingView
         $settings = array(
             'pageLength'    => $this->options['page_length'],
             'columns'       => $columns,
-            'deferLoading'  => $this->options['page_length'] ?: null,
+            'deferLoading'  => $this->options['page_length'] ? $this->allResultCount : null,
             'lengthMenu'    => $this->options['page_length_menu'],
-            'autoWidth'    => $this->options['auto_width'],
+            'autoWidth'     => $this->options['auto_width'],
+            'order'         => $this->options['order_column'],
+            'stateSave'     => $this->options['save_state'],
         );
 
         return $settings;

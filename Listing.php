@@ -20,6 +20,7 @@ use PawelLen\DataTablesListing\Renderer\ListingRendererInterface;
 use PawelLen\DataTablesListing\Filter\Type\ListingFilter;
 use PawelLen\DataTablesListing\Column\Columns;
 use PawelLen\DataTablesListing\Filter\Filters;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 
 class Listing
@@ -69,6 +70,11 @@ class Listing
      */
     protected $firstResultsOffset;
 
+    /**
+     * @var PropertyAccessor
+     */
+    private $propertyAccessor;
+
 
 
     /**
@@ -89,6 +95,7 @@ class Listing
         $this->eventDispatcher = $eventDispatcher;
         $this->renderer = $renderer;
         $this->options = $options;
+        $this->propertyAccessor = new PropertyAccessor();
     }
 
 
@@ -102,7 +109,8 @@ class Listing
             $this->columns,
             $this->filters,
             $this->options,
-            $this->getInitialData()
+            $this->getInitialData(),
+            $this->allResultsCount
         );
 
         return $listingView;
@@ -160,7 +168,7 @@ class Listing
         }
 
         $data = $this->loadData($parameters, $filters);
-        $data = $this->processData($data);
+        $data = $this->processInitialData($data, true);
 
         return $data;
     }
@@ -220,7 +228,7 @@ class Listing
      * @return array
      * @throws \Exception
      */
-    protected function processData($data)
+    protected function processData($data, $isInitialData = false)
     {
         if (!is_array($data) && !$data instanceof \Traversable) {
             throw new \Exception('Unable to process data, query result is not traversable.');
@@ -231,16 +239,77 @@ class Listing
 
         $table = array();
         foreach ($data as $row) {
-            $tr = array();
+            $tr = $this->getRowSpecialParams($row, true);
             /** @var ListingColumnTypeInterface $column */
             foreach ($this->columns as $column) {
                 $tr[] = $this->renderer->renderCell($column, $row);
             }
             $table[] = $tr;
         }
+        //var_dump($table);
 
         return $table;
     }
+
+
+    /**
+     * @param $data
+     * @return array
+     * @throws \Exception
+     */
+    protected function processInitialData($data, $isInitialData = false)
+    {
+        if (!is_array($data) && !$data instanceof \Traversable) {
+            throw new \Exception('Unable to process data, query result is not traversable.');
+        }
+
+        // Load renderer template:
+        $this->renderer->load(isset($this->options['template']) ? $this->options['template'] : null);
+
+        $table = array();
+        foreach ($data as $row) {
+            $tr = array(
+                'values' => array(),
+                'params' => $this->getRowSpecialParams($row)
+            );
+            /** @var ListingColumnTypeInterface $column */
+            foreach ($this->columns as $column) {
+                $tr['values'][] = $this->renderer->renderCell($column, $row);
+            }
+            $table[] = $tr;
+        }
+
+        return $table;
+    }
+
+
+    protected function getRowSpecialParams($row, $isAjax = true)
+    {
+        $params = array();
+
+        // Id parameter:
+        if (isset($this->options['tr']['id']) && $this->options['tr']['id'] !== null) {
+            $paramName = $isAjax ? 'DT_RowId' : 'id';
+            try {
+                $params[$paramName] = $this->name . '_row_'.$this->propertyAccessor->getValue($row, $this->options['tr']['id']);
+            } catch (\Exception $e) {
+                unset($params[$paramName]);
+            };
+        }
+
+        // Class parameter:
+        if (isset($this->options['tr']['class']) && $this->options['tr']['class'] !== null) {
+            $paramName = $isAjax ? 'DT_RowClass' : 'class';
+            $params[$paramName] = (string)$this->options['tr']['class'];
+        }
+
+        if ($isAjax) {
+            $params['_isAjax'] = true;
+        }
+
+        return $params;
+    }
+
 
 
     /**
