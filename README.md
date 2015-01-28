@@ -327,6 +327,12 @@ Egzamles:
 
 
 
+
+
+
+
+
+
 Functions
 ===
 
