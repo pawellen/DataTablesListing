@@ -15,7 +15,7 @@ Installation
 }
 ```
 
-+ Update Your AppKernel.php
+1. Update Your AppKernel.php
 ```php
 $bundles = array (
     (...)
@@ -23,7 +23,7 @@ $bundles = array (
 );
 ```
 
-+ Configuration:
+2. Configuration:
 
 data_tables_listing:
     default_id_property: "id"
@@ -43,7 +43,7 @@ data_tables_listing:
     ***jquery_js***           - reference to jQuery source file
 
 
-+ Add assets to your template using ***render_listing_assets*** twig function.
+3. Add assets to your template using ***render_listing_assets*** twig function.
 Example:
 ```html
     <html>
