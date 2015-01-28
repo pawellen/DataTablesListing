@@ -41,15 +41,15 @@ data_tables_listing:
         jquery_js: "//code.jquery.com/jquery-2.1.3.min.js"  
 ```
   
-+ ***default_id_property*** - stands for root entity identifier property, currently used to set ***tr*** id attribute  
-+ ***default_template***    - allow overwrite default template  
-+ ***include_assets***      - asset files references (used in render_listing_assets twig function), if set to ***false*** asset wont be included  
-   - ***datatables_js***       - reference to DataTables js source file  
-   - ***datatables_css***      - reference to DataTables css source file  
-   - ***include_jquery***      - decide if jquery should be included, default false  
-   - ***jquery_js***           - reference to jQuery source file  
++ ***default_id_property*** - stands for root entity identifier property, currently used to set ***tr*** id attribute
++ ***default_template***    - allow overwrite default template
++ ***include_assets***      - asset files references (used in render_listing_assets twig function), if set to ***false*** asset wont be included
+   - ***datatables_js***       - reference to DataTables js source file
+   - ***datatables_css***      - reference to DataTables css source file
+   - ***include_jquery***      - decide if jquery should be included, default false
+   - ***jquery_js***           - reference to jQuery source file
   
-
+  
 4. Add assets to your template using ***render_listing_assets*** twig function:
 ---
 
@@ -67,17 +67,19 @@ Example:
         </body>
     </html>
 ```
-
+  
+  
 5. Your listing is ready to use :)
 ---
-
-
-
+  
+  
+  
 Usage
 ===
 
 1. Creating new table in controller.
 ---
+
 To create listing you just need to get ***listing*** service in your controller and pass to it your listing type object.
 Example:
 
@@ -126,10 +128,9 @@ As you can see usage of listing is very similar to Symfony forms component. Opti
     - ***class*** => string, class for tr elements
  + ***order_column*** - array, starting order array for DataTables plugin. Default is array()
  + ***save_state*** - boolean, switch saveState for DataTables plugin
-
-
-
-
+  
+  
+  
 2. Creating own ListingType
 ---
 
@@ -137,58 +138,95 @@ Creating new listing type looks similar like creation of symfony form.
 Example:
 
 ```php
-namespace Td\UserBundle\Listing;
-
-use PawelLen\DataTablesListing\Type\AbstractType;
-use PawelLen\DataTablesListing\Filters\FilterBuilderInterface;
-use PawelLen\DataTablesListing\Listing\ListingBuilderInterface;
-
-class UserListing extends AbstractType
-{
-    public function buildFilters(FilterBuilderInterface $builder, array $options)
+    use Doctrine\ORM\QueryBuilder;
+    use Symfony\Component\OptionsResolver\OptionsResolver;
+    use PawelLen\DataTablesListing\Filter\FilterBuilderInterface;
+    use PawelLen\DataTablesListing\Column\ColumnBuilderInterface;
+    use PawelLen\DataTablesListing\Type\AbstractType;
+    
+    
+    class UserListing extends AbstractType
     {
-        $builder->add('name', 'text', array(
-            'label' => 'User name',
-            'required' => false,
-            'filter' => array(
-                'property' => 'name',
-                'expression' => 'c.name LIKE :name'
-            )
-        ));
-        $builder->add('email', 'text', array(
-            'label' => 'Email',
-            'required' => false,
-            'filter' => array(
-                'expression' => 'c.shortName LIKE :shortName'
-            )
-        ));
+    
+        public function buildFilters(FilterBuilderInterface $builder, array $options)
+        {
+            $builder->
+                add('phrase', 'search', array(
+                    'label' => 'Search',
+                    'filter' => array(
+                        'expression' => '(u.username LIKE ?) OR (u.email LIKE ?) OR (u.firstname LIKE ?) OR (u.lastname LIKE ?)',
+                        'eval' => '%like%'
+                    )
+                ))
+            ;
+        }
+    
+    
+        public function buildColumns(ColumnBuilderInterface $builder, array $options)
+        {
+            $builder
+                ->add('checkbox', 'checkbox', array(
+                    'label' => 'Select [ID]',
+                    'property' => 'id',
+                    'order_by' => 'u.id'
+                ))
+                ->add('firstname', 'column', array(
+                    'label' => 'First name',
+                    'route' => 'user_show',
+                    'parameters' => array(
+                        'id' => 'id'
+                    )
+                ))
+                ->add('lastname', 'column', array(
+                    'label' => 'Last name',
+                    'route' => 'user_show',
+                    'parameters' => array(
+                        'id' => 'id'
+                    )
+                ))
+                ->add('email', 'column', array(
+                    'label' => 'Email',
+                    'route' => 'user_show',
+                    'parameters' => array(
+                        'id' => 'id'
+                    )
+                ))
+                ->add('edit', 'button', array(
+                    'label' => 'Edit',
+                    'route' => 'user_edit',
+                    'parameters' => array(
+                        'id' => 'id'
+                    )
+                ))
+            ;
+        }
+    
+    
+        public function setDefaultOptions(OptionsResolver $resolver)
+        {
+            $resolver->setDefaults(array(
+                'query_builder' => function (QueryBuilder $builder) {
+                    $builder->select('u')
+                        ->from('LenTreeBundle:User', 'u')
+                        ->where('u.isUser = 1');
+                },
+                'page_length_menu'  => array(1, 2, 3, 10, 25, 50, -1),
+                'attr' => array(
+                    'novalidate' => 'novalidate'
+                ),
+                'row_attr' =>array(
+                    'id' => 'id',
+                    'class' => 'tr-class'
+                )
+            ));
+        }
+    
+    
+        public function getName()
+        {
+            return 'user_list';
+        }
     }
-
-    public function buildListing(ListingBuilderInterface $builder, array $options)
-    {
-        $builder->add('id', 'column', array(
-            'label' => 'Id'
-        ));
-        $builder->add('name', 'column', array(
-            'label' => 'User name'
-        ));
-        $builder->add('email', 'column', array(
-            'label' => 'Email'
-        ));
-    }
-
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(array(
-            'class' => 'TdUserBundle:User'
-        ));
-    }
-
-    public function getName()
-    {
-        return 'my_list';
-    }
-}
 ```
 
 This will create listing of users with two filter fields and three columns. ***Data source is pointed in setDefaultOptions*** method.
