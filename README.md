@@ -239,7 +239,7 @@ Instead of "query_bulder" you can also simply pass "***class***" option to load 
 ```
 
 
-3. Template
+3. Filters template
 ---
 
 To render created listing, you must pass ListingView object to your template:
@@ -250,7 +250,7 @@ Example:
 
 {% form_theme list.filters _self %}
 
-{% block _my_list_widget %}
+{% block listing_filters %}
     <div class="row">
         <div class="col-md-6">
             {{ form_row(form.name) }}
@@ -259,15 +259,73 @@ Example:
             {{ form_row(form.email) }}
         </div>
     </div>
-{% endblock _my_list_widget %}
+{% endblock listing_filters %}
 
 {% block content_body %}
-    {{ listing(list) }}
+    {{ render_listing(list) }}
 {% endblock %}
 
 ```
 
-To render entire listing, you can use ***listing()*** twig function. This example shows also how to overwrite filters template. Notice that there is a leading underscore in block name.
+To render entire listing, you can use ***render_listing()*** twig function. This example shows also how to overwrite filters template. Notice that there is a leading underscore in block name.
+
+
+3. Cells template
+---
+
+To render custom cell template simply add block with name pattern:
+
+```twig
+{% _[COLLUMN TYPE]_[COLUMN NAME] %}
+```
+  
+Inside your custom block you can use these twig variables:  
++ ***value*** - value of cell
++ ***name*** - name of cell
++ ***row*** - contains whole database record of row
++ ***column*** - column definition and attributes
++ ***parameters*** - parameters passed to column (use ***parameters*** options with allow to access row properties)
++ ***options*** - options passed to column
+  
+To enable cells templates you must pass ***template*** option to whole listing with reference to template you want to use.
+  
+  
+Egzamles:
+
++ Modifying header with name ***id***:
+```twig
+    {% block _header_id %}
+        <th {{ block('listing_widget_attributes') }} width="100">{{ label|trans }}</th>
+    {% endblock %}
+```
+  
++ Modifying button with name ***edit***:
+```twig
+    {% block _button_edit %}
+        <td class="cell-options-wrap">
+            <ul class="cell-options">
+                <li>
+                    <a href="{{ path(route, parameters) }}" class="cell-option--edit">
+                    <i class="svg--center svg__options ngapp-svg"></i>
+                    {{ label }}
+                </a>
+                </li>
+            </ul>
+        </td>
+    {% endblock %}
+```
+  
++ Modifying checkbox with name ***idcheck***:
+```twig
+    {% block _checkbox_idcheck %}
+        <td>
+            <input type="checkbox" name="{{ name }}[]" value="{{ value }}" id="row_checkbox_{{ row.id }}"/>
+            <label for="row_checkbox_{{ row.id }}">[{{ row.id }}]</label>
+        </td>
+    {% endblock %}
+```
+
+
 
 Functions
 ===
