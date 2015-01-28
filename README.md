@@ -29,7 +29,8 @@ $bundles = array (
 
 3. Configuration:
 ---
-  
+
+```yaml
 data_tables_listing:  
     default_id_property: "id"  
     default_template: LenPanelBundle::listing_div_layout.html.twig  
@@ -38,6 +39,7 @@ data_tables_listing:
         datatables_css: false  
         include_jquery: false  
         jquery_js: "//code.jquery.com/jquery-2.1.3.min.js"  
+```
   
 + ***default_id_property*** - stands for root entity identifier property, currently used to set ***tr*** id attribute  
 + ***default_template***    - allow overwrite default template  
