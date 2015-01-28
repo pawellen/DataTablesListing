@@ -29,23 +29,23 @@ $bundles = array (
 
 3. Configuration:
 ---
-
-data_tables_listing:
-    default_id_property: "id"
-    default_template: LenPanelBundle::listing_div_layout.html.twig
-    include_assets:
-        datatables_js: false
-        datatables_css: false
-        include_jquery: false
-        jquery_js: "//code.jquery.com/jquery-2.1.3.min.js"
-
-***default_id_property*** - stands for root entity identifier property, currently used to set ***tr*** id attribute  
-***default_template***    - allow overwrite default template  
-***include_assets***      - asset files references (used in render_listing_assets twig function), if set to ***false*** asset wont be included  
-    ***datatables_js***       - reference to DataTables js source file  
-    ***datatables_css***      - reference to DataTables css source file  
-    ***include_jquery***      - decide if jquery should be included, default false  
-    ***jquery_js***           - reference to jQuery source file  
+  
+data_tables_listing:  
+    default_id_property: "id"  
+    default_template: LenPanelBundle::listing_div_layout.html.twig  
+    include_assets:  
+        datatables_js: false  
+        datatables_css: false  
+        include_jquery: false  
+        jquery_js: "//code.jquery.com/jquery-2.1.3.min.js"  
+  
++ ***default_id_property*** - stands for root entity identifier property, currently used to set ***tr*** id attribute  
++ ***default_template***    - allow overwrite default template  
++ ***include_assets***      - asset files references (used in render_listing_assets twig function), if set to ***false*** asset wont be included  
+   - ***datatables_js***       - reference to DataTables js source file  
+   - ***datatables_css***      - reference to DataTables css source file  
+   - ***include_jquery***      - decide if jquery should be included, default false  
+   - ***jquery_js***           - reference to jQuery source file  
   
 
 4. Add assets to your template using ***render_listing_assets*** twig function:
@@ -120,8 +120,8 @@ As you can see usage of listing is very similar to Symfony forms component. Opti
  + ***page_length_menu*** - array that represent page length choices. Value -1 stands for all records, Default is array(10, 25, 50, 100, -1)
  + ***auto_width*** - boolean, switch automatic column width for DataTables plugin
  + ***row_attr*** - Table row attributes, allowed supoptions are:
-    ++ ***id*** - string, property path for tr elements id attributes
-    ++ ***class*** => string, class for tr elements
+    - ***id*** - string, property path for tr elements id attributes
+    - ***class*** => string, class for tr elements
  + ***order_column*** - array, starting order array for DataTables plugin. Default is array()
  + ***save_state*** - boolean, switch saveState for DataTables plugin
 
