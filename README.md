@@ -229,8 +229,15 @@ Example:
     }
 ```
 
-This will create listing of users with two filter fields and three columns. ***Data source is pointed in setDefaultOptions*** method.
- Instead of single entity passed in "class" option you can use also option query_builder and provide query builder interface to access more complicated query with joins.
+This will create listing of users with two filter fields and three columns. ***Data source is pointed in setDefaultOptions*** method.  
+Instead of "query_bulder" you can also simply pass "***class***" option to load all entities that type.
+
+```php
+    $resolver->setDefaults(array(
+        'class' => 'LenTreeBundle:User'
+    ));
+```
+
 
 3. Template
 ---
