@@ -6,6 +6,7 @@ services:
             registry: "@doctrine"
             eventDispatcher: "@event_dispatcher"
             renderer: "@listing.renderer"
+            defaultIdProperty: "%data_tables_listing.default_id_property%"
 
     listing.renderer:
         class: PawelLen\DataTablesListing\Renderer\ListingRenderer

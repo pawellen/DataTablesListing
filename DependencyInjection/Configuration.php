@@ -21,6 +21,9 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('data_tables_listing');
         $rootNode
             ->children()
+                ->scalarNode('default_id_property')
+                    ->defaultValue(null)
+                ->end()
                 ->arrayNode('include_assets')
                     ->addDefaultsIfNotSet()
                     ->children()

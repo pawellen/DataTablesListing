@@ -146,7 +146,8 @@ class ListingRenderer implements ListingRendererInterface
         // Create template block name and parameters:
         $blockName = 'listing_' . $column->getType();
         $parameters = array_merge(array(
-            'column' => $column
+            'column' => $column,
+            'row'    => $row,
         ), $values);
 
         // Render block:

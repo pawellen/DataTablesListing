@@ -76,55 +76,19 @@
                     $('#' + tableId + '_paginate').hide();
                 }
             },
-            rowCallback: function(row, data) {
-
-                /*
-                // TOP TOP
-                $('>', row).each(function(index, td) {
-                    console.log(index, typeof data[index])
-                    $(td).replaceWith('<th>'+data[index]+'</th>');
-                    //console.log(index, value)
-                });
-                */
-
-                /*
-                for (var i = 0; i < data.length; i++) {
-                    var td = $(':eq(' + i + ')', row);
-                    td.replaceWith('<th>sdfsdf</th>');
-                    //var tdClass = td.attr('class');
-                    console.log('run');
-                    //var newTd = $(data[i]);
-                    //newTd.addClass(tdClass);
-                    //td.replaceWith(newTd);
-                }
-                */
-                /*
-                for (var i = 0; i < data.length; i++) {
-                    var td = $(':eq(' + i + ')', row);
-                    //console.log(td);
-                    td.replaceWith('<th>'+data[i]+'</th>');
-                }
-                */
-
-
-
-                return row;
-            },
             createdRow: function(row, data, dataIndex) {
                 if (typeof data._isAjax !== 'undefined' && data._isAjax) {
-                    // Process single <tr>, after table row is added to add custom td html:
+                    // Process single <tr> for ajax call, after table row is added to add custom td html:
                     $('>', row).each(function(index, originalTd) {
                         var $td = $(data[index]);
                         var $originalTd = $(originalTd);
                         // Copy all attributes:
-                        $.each($td.prop("attributes"), function() {
+                        $.each($td.prop('attributes'), function() {
                             $originalTd.attr(this.name, this.value);
                         });
                         $originalTd.html($td.html());
                     });
                 }
-
-                //return row;
             },
             //pagingType: "scrolling',
             pageLength: 20
@@ -133,7 +97,6 @@
 
         // Init table:
         settings = $.extend(defaultSettings, settings);
-        console.log('DataTables settings:', settings);
         var table = $table.DataTable(settings);
 
         // Start searching events:
@@ -154,8 +117,8 @@
     var getInputNameAndValue = function(input) {
         var getLastChunkOfInputName = function(name)
         {
+            name = name + '';
             var chunks = [];
-            var name = name + '';
             var parts = name.split('[');
             for (var i=0; i < parts.length; i++) {
                 var part = parts[i];
@@ -194,4 +157,5 @@
             value: value
         }
     }
+
 }(this.DataTablesListing = this.DataTablesListing || {}));

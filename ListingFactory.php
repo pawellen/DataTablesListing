@@ -42,6 +42,10 @@ class ListingFactory
      */
     protected $renderer;
 
+    /**
+     * @var string|null
+     */
+    protected $defaultIdProperty;
 
 
     /**
@@ -49,13 +53,15 @@ class ListingFactory
      * @param RegistryInterface $registry
      * @param EventDispatcherInterface $eventDispatcher
      * @param ListingRendererInterface $renderer
+     * @param string|null $defaultIdProperty
      */
-    public function __construct(FormFactoryInterface $formFactory, RegistryInterface $registry, EventDispatcherInterface $eventDispatcher, ListingRendererInterface $renderer)
+    public function __construct(FormFactoryInterface $formFactory, RegistryInterface $registry, EventDispatcherInterface $eventDispatcher, ListingRendererInterface $renderer, $defaultIdProperty = null)
     {
         $this->formFactory = $formFactory;
         $this->registry = $registry;
         $this->eventDispatcher = $eventDispatcher;
         $this->renderer = $renderer;
+        $this->defaultIdProperty = $defaultIdProperty;
     }
 
 
@@ -103,23 +109,17 @@ class ListingFactory
             'process_row_callback',
             'order_by',
             'order_direction',
+            'order_column'
         ));
-        /**
-         * tr options:
-        'tr' => array(
-            'id' => null,
-            'class' => null,
-        ),
 
-         */
         $optionsResolver->setDefaults(array(
             'data_source'       => $dataSourceResolver,
             'date_format'       => 'd-m-Y H:i:s',
             'page_length'       => 10,
             'page_length_menu'  => array(10, 25, 50, 100, -1),
             'auto_width'        => true,
-            'tr'                => array(
-                'id'    => null,
+            'row_attr'          => array(
+                'id'    => $this->defaultIdProperty ?: null,
                 'class' => null
             ),
             'order_column'      => array(),

@@ -28,7 +28,7 @@ class ListingColumn extends ListingColumnType
      */
     public function isSortable()
     {
-        if (isset($this->options['order_by']) && $this->options['order_by'] === false) {
+        if (isset($this->options['order_by']) && !$this->options['order_by']) {
             return false;
         }
 

@@ -22,6 +22,19 @@ class ListingRadio extends ListingColumnType
 
 
     /**
+     * @return bool
+     */
+    public function isSortable()
+    {
+        if (isset($this->options['order_by'])) {
+            return $this->options['order_by'];
+        }
+
+        return false;
+    }
+
+
+    /**
      * @inheritdoc
      */
     public function getValues($row)

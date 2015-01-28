@@ -228,7 +228,7 @@ class Listing
      * @return array
      * @throws \Exception
      */
-    protected function processData($data, $isInitialData = false)
+    protected function processData($data)
     {
         if (!is_array($data) && !$data instanceof \Traversable) {
             throw new \Exception('Unable to process data, query result is not traversable.');
@@ -246,7 +246,6 @@ class Listing
             }
             $table[] = $tr;
         }
-        //var_dump($table);
 
         return $table;
     }
@@ -257,7 +256,7 @@ class Listing
      * @return array
      * @throws \Exception
      */
-    protected function processInitialData($data, $isInitialData = false)
+    protected function processInitialData($data)
     {
         if (!is_array($data) && !$data instanceof \Traversable) {
             throw new \Exception('Unable to process data, query result is not traversable.');
@@ -286,21 +285,22 @@ class Listing
     protected function getRowSpecialParams($row, $isAjax = true)
     {
         $params = array();
+        $attr = $this->options['row_attr'];
 
         // Id parameter:
-        if (isset($this->options['tr']['id']) && $this->options['tr']['id'] !== null) {
+        if (isset($attr['id']) && $attr['id'] !== null) {
             $paramName = $isAjax ? 'DT_RowId' : 'id';
             try {
-                $params[$paramName] = $this->name . '_row_'.$this->propertyAccessor->getValue($row, $this->options['tr']['id']);
+                $params[$paramName] = $this->name . '_row_'.$this->propertyAccessor->getValue($row, $attr['id']);
             } catch (\Exception $e) {
                 unset($params[$paramName]);
             };
         }
 
         // Class parameter:
-        if (isset($this->options['tr']['class']) && $this->options['tr']['class'] !== null) {
+        if (isset($attr['class']) && $attr['class'] !== null) {
             $paramName = $isAjax ? 'DT_RowClass' : 'class';
-            $params[$paramName] = (string)$this->options['tr']['class'];
+            $params[$paramName] = (string)$attr['class'];
         }
 
         if ($isAjax) {

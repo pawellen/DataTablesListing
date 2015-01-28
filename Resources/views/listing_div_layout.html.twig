@@ -66,7 +66,6 @@
 {%- block listing_button -%}
 {% spaceless %}
     {% set _block = block('_button_' ~ column.name) %}
-
     {% if _block %}
         {{ _block|raw }}
     {% else %}
@@ -81,7 +80,6 @@
 {%- block listing_checkbox -%}
 {% spaceless %}
     {% set _block = block('_checkbox_' ~ column.name) %}
-
     {% if _block %}
         {{ _block|raw }}
     {% else %}
@@ -96,7 +94,6 @@
 {%- block listing_radio -%}
 {% spaceless %}
     {% set _block = block('_radio_' ~ column.name) %}
-
     {% if _block %}
         {{ _block|raw }}
     {% else %}
@@ -106,8 +103,6 @@
     {% endif %}
 {% endspaceless %}
 {%- endblock listing_radio -%}
-
-
 
 
 {% block listing_head %}
@@ -131,11 +126,10 @@
     <tbody>
     {% if listing.data is not empty%}
         {% for row in listing.data %}
-            <tr>
-                {% for key, cell in row %}
-                    {%  if key != 'DT_RowId' %}
-                        {{ cell|raw }}
-                    {% endif %}
+            {% set attr = row.params %}
+            <tr {{ block('listing_widget_attributes') }}>
+                {% for td in row.values %}
+                    {{ td|raw }}
                 {% endfor %}
             </tr>
         {% endfor %}

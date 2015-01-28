@@ -26,13 +26,8 @@ class DataTablesListingExtension extends Extension
         $loader->load('services.yml');
 
         // Remap parameters:
+        $container->setParameter('data_tables_listing.default_id_property', $config['default_id_property']);
         $container->setParameter('data_tables_listing.default_template', $config['default_template']);
         $container->setParameter('data_tables_listing.include_assets', $config['include_assets']);
-        /*
-        $container->setParameter('data_tables_listing.include_assets.datatables_js', $config['include_assets']['datatables_js']);
-        $container->setParameter('data_tables_listing.include_assets.datatables_css', $config['include_assets']['datatables_css']);
-        $container->setParameter('data_tables_listing.include_assets.include_jquery', $config['include_assets']['include_jquery']);
-        $container->setParameter('data_tables_listing.include_assets.jquery_js', $config['include_assets']['jquery_js']);
-        */
     }
 }
