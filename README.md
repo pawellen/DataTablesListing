@@ -8,14 +8,14 @@ Data tables listing plugin allow you to easy creating record list, using Symfony
 Installation
 ===
 
-1. Install plugin using composer:
++ Install plugin using composer:
 ```js
 {
     "pawellen/data-tables-listing": "dev-master"
 }
 ```
 
-2. Update Your AppKernel.php
++ Update Your AppKernel.php
 ```php
 $bundles = array (
     (...)
@@ -23,7 +23,7 @@ $bundles = array (
 );
 ```
 
-3. Configuration:
++ Configuration:
 
 data_tables_listing:
     default_id_property: "id"
@@ -43,7 +43,7 @@ data_tables_listing:
     ***jquery_js***           - reference to jQuery source file
 
 
-3. Add assets to your template using ***render_listing_assets*** twig function.
++ Add assets to your template using ***render_listing_assets*** twig function.
 Example:
 ```html
     <html>
