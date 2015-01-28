@@ -8,14 +8,18 @@ Data tables listing plugin allow you to easy creating record list, using Symfony
 Installation
 ===
 
-+  Install plugin using composer:
+1. Install plugin using composer:
+---
+  
 ```js
 {
     "pawellen/data-tables-listing": "dev-master"
 }
 ```
 
-+  Update Your AppKernel.php
+2. Update Your AppKernel.php
+---
+
 ```php
 $bundles = array (
     (...)
@@ -23,7 +27,8 @@ $bundles = array (
 );
 ```
 
-+  Configuration:
+3. Configuration:
+---
 
 data_tables_listing:
     default_id_property: "id"
@@ -43,7 +48,9 @@ data_tables_listing:
     ***jquery_js***           - reference to jQuery source file  
   
 
-+  Add assets to your template using ***render_listing_assets*** twig function.
+4. Add assets to your template using ***render_listing_assets*** twig function:
+---
+
 Example:
 ```html
     <html>
@@ -59,7 +66,10 @@ Example:
     </html>
 ```
 
-+  Your listing is ready to use :)
+5. Your listing is ready to use :)
+---
+
+
 
 Usage
 ===
@@ -70,32 +80,53 @@ To create listing you just need to get ***listing*** service in your controller 
 Example:
 
 ```php
+    use PawelLen\DataTablesListing\Listing;
+    
+    (...)
+    
     /**
-     * @Route("/user/list")
+     * @Route("/", name="user_list")
      * @Template()
      */
     public function listAction(Request $request)
     {
-        // Creates new listing object:
-        $list = $this->get('listing')->createListing(new UserListing(), array(
+        /** @var Listing $listing */
+        $listing = $this->get('listing')->createListing(new UserListing(), array(
+            'template' => 'LenPanelBundle:User:list.html.twig',
             'request' => $request
         ));
 
-        // Handle ajax request that provide data to listing:
         if ($request->isXmlHttpRequest()) {
-
-            return $list->createResponse($request);
+            return $listing->createResponse();
         }
 
-        // Pass ListView object to your template:
         return array(
-            'list' => $list->createView()
+            'listing' => $listing->createView()
         );
     }
 ```
 
-As you can see usage of listing is very similar to Symfony forms component.
- As one of options passed to ***createListing*** method is Request object. Request object is used to get any data passed form your site, for example filters, column order by itp...
+As you can see usage of listing is very similar to Symfony forms component. Options:  
+ + ***request*** - Request object. Used to get any data passed form your site, for example filters, column order by itp...
+ + ***template*** - Template reference. Allow to set custom template
+ + ***query_builder*** - QueryBuilder callback - builds query for listing
+ + ***process_result_callback*** - callback for processing whole result object
+ + ***process_row_callback*** - callback for processing single result row
+ + ***order_by*** - dql field, default order when table is loading
+ + ***order_direction*** - asc|desc, direction of ***order_by***
+ + ***order_column*** - NOT IMPLEMENTED YET
+ + ***data_source*** - callback or string, url for ajax requests
+ + ***page_length*** - number of records per one page, default is 10
+ + ***page_length_menu*** - array that represent page length choices. Value -1 stands for all records, Default is array(10, 25, 50, 100, -1)
+ + ***auto_width*** - boolean, switch automatic column width for DataTables plugin
+ + ***row_attr*** - Table row attributes, allowed supoptions are:
+    ++ ***id*** - string, property path for tr elements id attributes
+    ++ ***class*** => string, class for tr elements
+ + ***order_column*** - array, starting order array for DataTables plugin. Default is array()
+ + ***save_state*** - boolean, switch saveState for DataTables plugin
+
+
+
 
 2. Creating own ListingType
 ---
@@ -211,11 +242,11 @@ To create link you need to add ***link*** option inside ***buildListing*** metho
     ));
 ```
 
-where:
-    ***id*** is a ***propertyPath*** string.
-    ***route*** is a route name
-    ***params*** are parameters to generateUrl function
-
+where:  
+    ***id*** is a ***propertyPath*** string.  
+    ***route*** is a route name  
+    ***params*** are parameters to generateUrl function  
+  
 
 2. Using QueryBuilder
 ---
