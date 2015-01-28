@@ -34,14 +34,14 @@ data_tables_listing:
         include_jquery: false
         jquery_js: "//code.jquery.com/jquery-2.1.3.min.js"
 
-***default_id_property*** - stands for root entity identifier property, currently used to set ***tr*** id attribute
-***default_template***    - allow overwrite default template
-***include_assets***      - asset files references (used in render_listing_assets twig function), if set to ***false*** asset wont be included
-    ***datatables_js***       - reference to DataTables js source file
-    ***datatables_css***      - reference to DataTables css source file
-    ***include_jquery***      - decide if jquery should be included, default false
-    ***jquery_js***           - reference to jQuery source file
-
+***default_id_property*** - stands for root entity identifier property, currently used to set ***tr*** id attribute  
+***default_template***    - allow overwrite default template  
+***include_assets***      - asset files references (used in render_listing_assets twig function), if set to ***false*** asset wont be included  
+    ***datatables_js***       - reference to DataTables js source file  
+    ***datatables_css***      - reference to DataTables css source file  
+    ***include_jquery***      - decide if jquery should be included, default false  
+    ***jquery_js***           - reference to jQuery source file  
+  
 
 +  Add assets to your template using ***render_listing_assets*** twig function.
 Example:
