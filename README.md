@@ -14,17 +14,19 @@ Installation
     "pawellen/data-tables-listing": "dev-master"
 }
 ```
+
 2. Update Your AppKernel.php
 ```php
-    $bundles = array (
-        (...)
-        new PawelLen\DataTablesListing\DataTablesListingBundle()
-    );
+$bundles = array (
+    (...)
+    new PawelLen\DataTablesListing\DataTablesListingBundle()
+);
+```
 
-
-2,5. Configuration:
+3. Configuration:
 
 data_tables_listing:
+    default_id_property: "id"
     default_template: LenPanelBundle::listing_div_layout.html.twig
     include_assets:
         datatables_js: false
@@ -32,15 +34,23 @@ data_tables_listing:
         include_jquery: false
         jquery_js: "//code.jquery.com/jquery-2.1.3.min.js"
 
+***default_id_property*** - stands for root entity identifier property, currently used to set ***tr*** id attribute
+***default_template***    - allow overwrite default template
+***include_assets***      - asset files references (used in render_listing_assets twig function), if set to ***false*** asset wont be included
+    ***datatables_js***       - reference to DataTables js source file
+    ***datatables_css***      - reference to DataTables css source file
+    ***include_jquery***      - decide if jquery should be included, default false
+    ***jquery_js***           - reference to jQuery source file
 
-3. Add DataTables javascript script to your template using listing_scripts twig function.
+
+3. Add assets to your template using ***render_listing_assets*** twig function.
 Example:
 ```html
     <html>
         <head>
             (...)
-            <script src="{{ asset('bundles/exapmlebundle/js/jquery/jquery.min.js') }}" type="text/javascript"></script>
-            {{ listing_scripts() }}
+            <script src="{{ asset('bundles/exapmlebundle/js/my_script.js') }}" type="text/javascript"></script>
+            {{ render_listing_assets() }}
             (...)
         </head>
         <body>
@@ -48,6 +58,8 @@ Example:
         </body>
     </html>
 ```
+
+
 4. Your listing is ready to use :)
 
 Usage
