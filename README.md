@@ -72,8 +72,7 @@ Example:
 5. Your listing is ready to use :)
 ---
   
-  
-  
+
 Usage
 ===
 
