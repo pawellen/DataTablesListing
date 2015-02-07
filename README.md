@@ -270,7 +270,7 @@ Example:
 To render entire listing, you can use ***render_listing()*** twig function. This example shows also how to overwrite filters template. Notice that there is a leading underscore in block name.
 
 
-3. Cells template
+4. Cells template
 ---
 
 To render custom cell template simply add block with name pattern:
@@ -329,10 +329,6 @@ Egzamles:
 
 
 
-
-
-
-
 Functions
 ===
 
@@ -344,11 +340,9 @@ To create link you need to add ***link*** option inside ***buildListing*** metho
 ```php
     $builder->add('name', 'column', array(
         'label' => 'User name',
-        'link' => array(
-            'route' => 'user_edit',
-            'params' => array(
-                'user_id' => 'id'
-            )
+        'route' => 'user_edit',
+        'parameters' => array(
+            'user_id' => 'id'
         )
     ));
 ```
@@ -356,7 +350,7 @@ To create link you need to add ***link*** option inside ***buildListing*** metho
 where:  
     ***id*** is a ***propertyPath*** string.  
     ***route*** is a route name  
-    ***params*** are parameters to generateUrl function  
+    ***parameters*** are parameters to generateUrl function  
   
 
 2. Using QueryBuilder
@@ -444,24 +438,6 @@ In some cases your listing is very simple but there is case when you use some fi
 
 In this example when user fill "Language code" filter, ***join('c.language')*** will be added and languageCode condition will be added to query.
 
-***Deprecated*** parameter joins (used in old version):
-
-```php
-     // DEPRECATED:
-     $builder->add('country', 'text', array(
-         'label' => 'Country name',
-         'required' => false,
-         'filter' => array(
-             'expression' => 'c.name LIKE :country',
-             'eval' => '%like%',
-             'join' => array(
-                 array('field' => 'u.address', 'alias' => 'a'),
-                 array('field' => 'a.country', 'alias' => 'c'),
-             )
-         )
-     ))
-```
-
 In this case country will be joined only if country filter is passed by user, otherwise joins are not used.
 
 
@@ -475,18 +451,13 @@ Example:
     ->add('edit', 'button', array(
         'label' => 'Edit',
         'route' => 'user_edit',
-        'params' => array(
-            'contractor_id' => 'id'
+        'parameters' => array(
+            'user_id' => 'id'
         )
     ))
 ```
 
-6. Events
----
-When you need dynamically modify/extend table rows or filters search criteria you can use one of listing events.
-
-
-7. Accessing custom properties via PropertyAccessor
+6. Accessing custom properties via PropertyAccessor
 ---
 
 When using ***query_bulder*** you can use option ***property*** to access any data from fetched entity. For example:
@@ -519,3 +490,11 @@ separated string:
 ```
 
 ***NOTE:*** You can use onlu one wildcard in your property option.
+
+
+6. Events
+---
+When you need dynamically modify/extend table rows or filters search criteria you can use one of listing events.
+(...)
+
+
