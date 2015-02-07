@@ -413,6 +413,7 @@ where:
 notice:
     ***:name*** MUST be always same as filter name (in current version)
 
+
 4. Using query modifications when filter is used
 ---
 
@@ -456,7 +457,7 @@ Example:
     ))
 ```
 
-6. Checkboxea
+6. Checkboxes
 ---
 
 Inside ***buildListing*** method you can add checkboxes to your list.
