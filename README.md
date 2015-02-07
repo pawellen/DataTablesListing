@@ -447,7 +447,7 @@ Inside ***buildListing*** method you can add action buttons to your list positio
 Example:
 
 ```php
-    ->add('edit', 'button', array(
+    $builder->add('edit', 'button', array(
         'label' => 'Edit',
         'route' => 'user_edit',
         'parameters' => array(
@@ -456,7 +456,21 @@ Example:
     ))
 ```
 
-6. Accessing custom properties via PropertyAccessor
+6. Checkboxea
+---
+
+Inside ***buildListing*** method you can add checkboxes to your list.
+Example:
+
+```php
+   $builder->add('idcheck', 'checkbox', array(
+        'label' => 'Select',
+        'property' => 'id',
+        'order_by' => 'p.id'
+    ))
+```
+
+7. Accessing custom properties via PropertyAccessor
 ---
 
 When using ***query_bulder*** you can use option ***property*** to access any data from fetched entity. For example:
@@ -491,7 +505,7 @@ separated string:
 ***NOTE:*** You can use onlu one wildcard in your property option.
 
 
-6. Events
+8. Events
 ---
 When you need dynamically modify/extend table rows or filters search criteria you can use one of listing events.
 (...)
