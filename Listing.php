@@ -9,7 +9,7 @@
 
 namespace PawelLen\DataTablesListing;
 
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,7 +41,7 @@ class Listing
     protected $filters;
 
     /**
-     * @var RegistryInterface
+     * @var Registry
      */
     protected $registry;
 
@@ -81,12 +81,12 @@ class Listing
      * @param string $name
      * @param Columns $columns
      * @param Filters $filters
-     * @param RegistryInterface $registry
+     * @param Registry $registry
      * @param EventDispatcherInterface $eventDispatcher
      * @param ListingRendererInterface $renderer
      * @param array $options
      */
-    public function __construct($name, Columns $columns, Filters $filters, RegistryInterface $registry, EventDispatcherInterface $eventDispatcher, ListingRendererInterface $renderer, array $options = array())
+    public function __construct($name, Columns $columns, Filters $filters, Registry $registry, EventDispatcherInterface $eventDispatcher, ListingRendererInterface $renderer, array $options = array())
     {
         $this->name = $name;
         $this->columns = $columns;
@@ -454,7 +454,7 @@ class Listing
                     $repository = $this->registry->getRepository($this->options['class']);
                     $queryBuilder = $this->options['query_builder']($repository);
                 } else {
-                    $queryBuilder = $this->registry->getEntityManager()->createQueryBuilder();
+                    $queryBuilder = $this->registry->getManager()->createQueryBuilder();
                     $this->options['query_builder']($queryBuilder);
                 }
             } else {
@@ -462,7 +462,7 @@ class Listing
             }
         } else {
             if (isset($this->options['class'])) {
-                $queryBuilder = $this->registry->getEntityManager()->createQueryBuilder();
+                $queryBuilder = $this->registry->getManager()->createQueryBuilder();
                 $queryBuilder->select('q')
                     ->from($this->options['class'], 'q');
             }
