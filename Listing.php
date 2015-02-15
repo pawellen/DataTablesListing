@@ -337,7 +337,7 @@ class Listing
     protected function applyFilters(QueryBuilder $queryBuilder, array $filters)
     {
         foreach ($filters as $name => $value) {
-            if (!isset($this->filters[$name])) {
+            if (!isset($this->filters[$name]) || (string)$value === '') {
                 continue;
             }
 
