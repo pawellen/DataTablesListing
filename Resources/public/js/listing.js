@@ -103,7 +103,7 @@
         $filters.find('input').on('keyup', function() {
             reDrawTableOnFilterInputEvent(this, table);
         });
-        $filters.find('select, input[type=\'checkbox\']').on('change', function() {
+        $filters.find('select, input[type=\'checkbox\'], input[type=\'date\']').on('change', function() {
             reDrawTableOnFilterInputEvent(this, table);
         });
         $filters.find('.datepicker').on('dp.change', function() {

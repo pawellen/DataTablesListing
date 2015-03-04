@@ -113,7 +113,8 @@ class ListingRenderer implements ListingRendererInterface
             $this->load();
 
         return trim($this->template->renderBlock('listing', array(
-            'listing' => $listingView
+            'listing' => $listingView,
+            'filters' => $listingView->getFiltersFormView()
         ), $this->blocks));
     }
 

@@ -26,14 +26,12 @@ interface ListingTypeInterface
     /**
      * @param ColumnBuilderInterface $builder
      * @param array $options
-     * @return mixed
      */
     public function buildColumns(ColumnBuilderInterface $builder, array $options);
 
 
     /**
      * @param OptionsResolver $resolver
-     * @return mixed
      */
     public function setDefaultOptions(OptionsResolver $resolver);
 

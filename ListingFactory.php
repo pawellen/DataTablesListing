@@ -90,6 +90,14 @@ class ListingFactory
                 $lengthMenu[1][] = $length > 0 ? (int)$length : '-';
             }
 
+            /*
+            // Ensure that "page_length" option is in "page_length_menu" array:
+            if (!isset($lengthMenu[0][0]) || !in_array((int)$options['page_length'], $lengthMenu[0])) {
+                $lengthMenu[0][] = $options['page_length'] > 0 ? (int)$options['page_length'] : -1;
+                $lengthMenu[1][] = $options['page_length'] > 0 ? (int)$options['page_length'] : '-';
+            }
+            */
+
             return $lengthMenu;
         };
 
@@ -114,7 +122,7 @@ class ListingFactory
 
         $optionsResolver->setDefaults(array(
             'data_source'       => $dataSourceResolver,
-            'date_format'       => 'd-m-Y H:i:s',
+            //'date_format'       => 'd-m-Y H:i:s',
             'page_length'       => 10,
             'page_length_menu'  => array(10, 25, 50, 100, -1),
             'auto_width'        => true,
