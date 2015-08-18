@@ -336,6 +336,7 @@ class Listing
      */
     protected function applyFilters(QueryBuilder $queryBuilder, array $filters)
     {
+        $arg = 0;
         foreach ($filters as $name => $value) {
             if (!isset($this->filters[$name]) || (string)$value === '') {
                 continue;
@@ -358,9 +359,9 @@ class Listing
                 $expression = $options['expression'];
                 $parameters_count = substr_count($expression, '?');
                 if ($parameters_count > 0) {
-                    for ($i = 0; $i < $parameters_count; $i++) {
-                        $expression = preg_replace('/\?/', ':arg_'.$i, $expression, 1);
-                        $queryBuilder->setParameter(':arg_'.$i, $value);
+                    for ($i = 0; $i < $parameters_count; $i++, $arg++) {
+                        $expression = preg_replace('/\?/', ':arg_'.$arg, $expression, 1);
+                        $queryBuilder->setParameter(':arg_'.$arg, $value);
                     }
                     $queryBuilder->andWhere($expression);
                 }
