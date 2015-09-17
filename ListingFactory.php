@@ -131,7 +131,8 @@ class ListingFactory
                 'class' => null
             ),
             'order_column'      => array(),
-            'save_state'        => false
+            'save_state'        => false,
+            'defer_load'        => false
         ));
         $optionsResolver->setNormalizers(array(
             'page_length_menu' => $pageLengthMenuOptionsNormalizer

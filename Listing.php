@@ -155,6 +155,10 @@ class Listing
      */
     protected function getInitialData()
     {
+        if ($this->options['defer_load']) {
+            return array();
+        }
+
         $parameters = array_merge($this->options['request']->query->all(), $this->options['request']->request->all());
 
         $filters = array();

@@ -161,7 +161,7 @@ class ListingView
         $settings = array(
             'pageLength'    => $this->options['page_length'],
             'columns'       => $columns,
-            'deferLoading'  => $this->options['page_length'] ? $this->allResultCount : null,
+            'deferLoading'  => (!$this->options['defer_load'] && $this->options['page_length']) ? $this->allResultCount : null,
             'lengthMenu'    => $this->options['page_length_menu'],
             'autoWidth'     => $this->options['auto_width'],
             'order'         => $this->options['order_column'],
