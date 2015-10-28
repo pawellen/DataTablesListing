@@ -297,7 +297,7 @@ class Listing
             try {
                 $params[$paramName] = $this->name . '_row_'.$this->propertyAccessor->getValue($row, $attr['id']);
             } catch (\Exception $e) {
-                unset($params[$paramName]);
+                unset($params[$paramName], $attr['id']);
             };
         }
 
@@ -305,6 +305,18 @@ class Listing
         if (isset($attr['class']) && $attr['class'] !== null) {
             $paramName = $isAjax ? 'DT_RowClass' : 'class';
             $params[$paramName] = (string)$attr['class'];
+            unset($attr['class']);
+        }
+
+        // Add custom attributes to row:
+        if (is_array($attr)) {
+            foreach ($attr as $name => $value) {
+                if (is_callable($value)) {
+                    $params['_rowAttr'][$name] = $value($row);
+                } else {
+                    $params['_rowAttr'][$name] = $value;
+                }
+            }
         }
 
         if ($isAjax) {

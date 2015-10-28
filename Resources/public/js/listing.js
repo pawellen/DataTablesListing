@@ -88,6 +88,35 @@
                         });
                         $originalTd.html($td.html());
                     });
+
+                    // Add custom attributes:
+                    if (typeof data._rowAttr === 'object') {
+                        var $row = $(row);
+                        for (var name in data._rowAttr) {
+                            if (data._rowAttr.hasOwnProperty(name)) {
+                                $row.attr(name, data._rowAttr[name]);
+                            }
+                        }
+                    }
+                }
+            },
+            stateSaveParams: function(settings, data) {
+                data.__filters = {};
+                $filters.find('input, select').each(function (index, input) {
+                    var res = getInputNameAndValue(input);
+                    if (res.value !== null && res.value !== '') {
+                        data.__filters[''+res.name] = ''+res.value;
+                    }
+                });
+            },
+            stateLoadParams: function(settings, data) {
+                if (typeof data.__filters === 'object') {
+                    $filters.find('input, select').each(function (index, input) {
+                        var res = getInputNameAndValue(input);
+                        if (typeof data.__filters[res.name] !== 'undefined') {
+                            $(input).val(data.__filters[res.name]);
+                        }
+                    });
                 }
             },
             //pagingType: "scrolling',
