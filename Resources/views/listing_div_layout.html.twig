@@ -32,7 +32,7 @@
             {{- attrname }}="{{ attrvalue|trans({}, translation_domain) }}"
         {%- elseif attrvalue is sameas(true) -%}
             {{- attrname }}="{{ attrname }}"
-        {%- elseif attrvalue is not sameas(false) -%}
+        {%- elseif attrvalue is not sameas(false) and attrvalue is not iterable -%}
             {{- attrname }}="{{ attrvalue }}"
         {%- endif -%}
     {%- endfor -%}
